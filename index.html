@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Spade LinkedIn ads: production set</title>
+<style>
+  :root {
+    --ground:      #F6F9F2;
+    --surface:     #FFFFFF;
+    --surface-2:   #EDF4E2;
+    --text:        #16200F;
+    --text-2:      #4C5C43;
+    --muted:       #6E7F64;
+    --line:        #D7E2CB;
+    --line-soft:   #E6EEDB;
+    --accent:      #3F7308;
+    --accent-text: #2F5606;
+    --flag:        #7A5200;
+    --flag-bg:     #FBF1D8;
+    --flag-line:   #E8D3A0;
+
+    --field:       #093328;
+    --field-deep:  #061F18;
+    --field-ink:   #F2F8EA;
+    --field-lime:  #B2EB76;
+    --field-mute:  #7E9A86;
+
+    --sans: "Helvetica Neue", Helvetica, "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+    --r: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #0A100809;
+      --ground:      #0A1008;
+      --surface:     #111A0E;
+      --surface-2:   #16220F;
+      --text:        #E4EEDA;
+      --text-2:      #B4C4A9;
+      --muted:       #8B9C81;
+      --line:        #26311F;
+      --line-soft:   #1C2616;
+      --accent:      #B2EB76;
+      --accent-text: #C3F08F;
+      --flag:        #E4C482;
+      --flag-bg:     #241D0E;
+      --flag-line:   #46381A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #0A1008;
+    --surface:     #111A0E;
+    --surface-2:   #16220F;
+    --text:        #E4EEDA;
+    --text-2:      #B4C4A9;
+    --muted:       #8B9C81;
+    --line:        #26311F;
+    --line-soft:   #1C2616;
+    --accent:      #B2EB76;
+    --accent-text: #C3F08F;
+    --flag:        #E4C482;
+    --flag-bg:     #241D0E;
+    --flag-line:   #46381A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 56px 28px 96px; }
+
+  /* ---- masthead ---- */
+  .masthead { display: flex; flex-direction: column; gap: 18px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  h1 {
+    margin: 0; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05;
+    letter-spacing: -.022em; font-weight: 700; text-wrap: balance; max-width: 22ch;
+  }
+  .standfirst { margin: 0; max-width: 66ch; color: var(--text-2); font-size: 17px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13px; color: var(--muted); }
+  .meta b { color: var(--text-2); font-weight: 600; }
+
+  /* ---- how to read ---- */
+  .legend {
+    margin-top: 32px; padding: 20px 22px; background: var(--surface-2);
+    border: 1px solid var(--line-soft); border-radius: var(--r);
+    display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+  .legend h2 { grid-column: 1 / -1; margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .legend div { font-size: 13.5px; color: var(--text-2); }
+  .legend .ord {
+    display: inline-grid; place-items: center; width: 19px; height: 19px; margin-right: 7px;
+    border-radius: 50%; background: var(--accent); color: var(--ground);
+    font-size: 11px; font-weight: 700; vertical-align: 1px;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .legend .ord { color: #0A1008; } }
+  :root[data-theme="dark"] .legend .ord { color: #0A1008; }
+
+  /* ---- section ---- */
+  .section { margin-top: 64px; }
+  .section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding-bottom: 10px; border-bottom: 2px solid var(--text); }
+  .section-head h2 { margin: 0; font-size: 23px; letter-spacing: -.015em; font-weight: 700; }
+  .section-head .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .throughline { margin: 14px 0 0; max-width: 74ch; font-size: 15.5px; color: var(--text-2); }
+  .throughline b { color: var(--text); font-weight: 600; }
+
+  .grid { margin-top: 26px; display: grid; gap: 26px; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+
+  /* ---- ad card ---- */
+  .ad { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; }
+  .ad-top { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
+  .ref { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent-text); }
+  .chip {
+    font-size: 11px; letter-spacing: .045em; text-transform: uppercase; font-weight: 600;
+    padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+  }
+  .chip.theme { border-color: var(--accent); color: var(--accent-text); }
+  .chip.flagged { border-color: var(--flag-line); background: var(--flag-bg); color: var(--flag); }
+  .chip.aud { border-color: var(--accent-text); color: var(--accent-text); font-weight: 700; }
+  .chip.aud.one { border-color: var(--flag-line); background: var(--flag-bg); color: var(--flag); }
+
+  /* the post text, as it sits above the creative */
+  .post { padding: 14px 16px 16px; }
+  .byline { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+  .avatar { width: 30px; height: 30px; border-radius: 5px; background: var(--field); display: grid; place-items: center; color: var(--field-lime); font-size: 13px; font-weight: 700; flex: none; }
+  .byline .who { font-size: 13px; font-weight: 600; line-height: 1.25; }
+  .byline .who span { display: block; font-size: 11.5px; font-weight: 400; color: var(--muted); }
+  .intro { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--text-2); }
+  .intro code {
+    font-family: var(--mono); font-size: 12.5px; background: var(--surface-2);
+    border: 1px solid var(--line-soft); border-radius: 4px; padding: 1px 4px; color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* the creative field: 4:5, brand-dark in both themes (this is the actual ad design) */
+  .field {
+    aspect-ratio: 4 / 5; background: var(--field); color: var(--field-ink);
+    padding: 30px 26px; display: flex; flex-direction: column; justify-content: center; gap: 16px;
+    background-image: radial-gradient(115% 85% at 8% 4%, rgba(178,235,118,.10), transparent 62%);
+  }
+  .field.ink { background-color: var(--field-deep); }
+  .headline {
+    margin: 0; font-size: clamp(21px, 2.5vw, 27px); line-height: 1.16;
+    letter-spacing: -.019em; font-weight: 700; text-wrap: balance;
+  }
+  .headline em { font-style: normal; color: var(--field-lime); }
+  .subcopy { margin: 0; font-size: 14px; line-height: 1.45; color: var(--field-mute); max-width: 34ch; }
+  .subcopy strong { color: var(--field-ink); font-weight: 600; }
+  .blank { font-family: var(--mono); font-size: clamp(34px, 6vw, 52px); font-weight: 700; color: var(--field-lime); letter-spacing: .02em; }
+  .strings { display: flex; flex-direction: column; gap: 7px; margin: 0; padding: 0; list-style: none; }
+  .strings li {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: -.01em; color: var(--field-mute);
+    display: flex; align-items: center; gap: 9px;
+  }
+  .strings li::before { content: ""; width: 15px; height: 15px; border-radius: 50%; background: rgba(255,255,255,.10); flex: none; }
+  .strings li.hit { color: var(--field-lime); }
+  .strings li.hit::before { background: var(--field-lime); }
+  .diff { display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 12.5px; }
+  .diff span { color: var(--field-mute); }
+  .diff span.on { color: var(--field-lime); }
+
+  /* the artifact-as-hero: a real descriptor or code, set as the image */
+  .hero-string {
+    font-family: var(--mono); font-weight: 700; color: var(--field-lime);
+    font-size: clamp(26px, 4.6vw, 40px); line-height: 1.08; letter-spacing: -.02em;
+    overflow-wrap: anywhere; margin: 0;
+  }
+  .readings { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .readings li { font-size: 14.5px; line-height: 1.35; color: var(--field-ink); font-weight: 600; }
+  .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .panels div { border: 1px solid rgba(255,255,255,.14); border-radius: 6px; padding: 9px 8px; display: grid; gap: 6px; align-content: start; }
+  .panels .lab { font-size: 9.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--field-mute); }
+  .panels .val { font-family: var(--mono); font-size: 10.5px; color: var(--field-ink); overflow-wrap: anywhere; }
+  .invoice { border: 1px solid rgba(255,255,255,.16); border-radius: 6px; overflow: hidden; font-size: 12.5px; }
+  .invoice .row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 11px; border-bottom: 1px solid rgba(255,255,255,.10); }
+  .invoice .row:last-child { border-bottom: none; }
+  .invoice .row.head { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--field-mute); }
+  .invoice .row.tot { font-weight: 700; color: var(--field-lime); font-family: var(--mono); }
+
+  .json { font-family: var(--mono); font-size: 12px; line-height: 1.55; margin: 0; color: var(--field-mute); white-space: pre; }
+  .json { color: var(--field-lime); }
+  .searchbox { display: flex; flex-direction: column; gap: 0; border: 1px solid rgba(255,255,255,.18); border-radius: 7px; overflow: hidden; }
+  .searchbox .q { font-family: var(--mono); font-size: 13px; padding: 9px 11px; color: var(--field-ink); border-bottom: 1px solid rgba(255,255,255,.14); }
+  .searchbox .q i { color: var(--field-lime); font-style: normal; }
+  .searchbox .r { font-size: 12.5px; padding: 8px 11px; color: var(--field-mute); border-bottom: 1px solid rgba(255,255,255,.07); }
+  .searchbox .r:first-of-type { color: var(--field-lime); }
+  .searchbox .r:last-child { border-bottom: none; }
+  .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .ticks li { font-size: 14px; line-height: 1.3; color: var(--field-ink); display: flex; gap: 9px; }
+  .ticks li::before { content: "\2713"; color: var(--field-lime); flex: none; font-weight: 700; }
+  .bars { display: flex; flex-direction: column; gap: 12px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-row .bl { font-size: 12.5px; color: var(--field-mute); width: 42px; flex: none; }
+  .bar-row .bf { height: 22px; border-radius: 3px; background: rgba(255,255,255,.16); }
+  .bar-row .bf.on { background: var(--field-lime); }
+  .bar-row .bv { font-family: var(--mono); font-size: 12.5px; color: var(--field-ink); }
+  .states { display: flex; flex-direction: column; gap: 7px; }
+  .states div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 11px; border: 1px solid rgba(255,255,255,.13); border-radius: 6px; font-size: 12.5px; color: var(--field-mute); }
+  .states div b { font-weight: 600; }
+  .states div.on { border-color: var(--field-lime); color: var(--field-lime); }
+  .stack { display: flex; flex-direction: column; gap: 6px; }
+  .stack div { padding: 9px 11px; border: 1px solid rgba(255,255,255,.15); border-radius: 6px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .stack div b { font-size: 13px; font-weight: 600; color: var(--field-ink); }
+  .stack div span { font-size: 11.5px; color: var(--field-mute); }
+  .stack div.base { border-color: var(--field-lime); background: rgba(178,235,118,.09); }
+  .stack div.base b { color: var(--field-lime); }
+
+  /* linkedin's grey headline bar */
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--surface-2); border-top: 1px solid var(--line-soft); }
+  .bar .lihead { font-size: 13.5px; font-weight: 600; line-height: 1.3; }
+  .bar .cta {
+    flex: none; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px;
+    border: 1.5px solid var(--accent); color: var(--accent-text); white-space: nowrap;
+  }
+
+  /* the working notes */
+  details { border-top: 1px solid var(--line-soft); }
+  summary {
+    padding: 11px 16px; font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 7px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; margin-left: auto; font-size: 15px; font-weight: 400; }
+  details[open] summary::after { content: "\2212"; }
+  summary:hover { color: var(--accent-text); }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .notes { padding: 0 16px 16px; font-size: 13.5px; color: var(--text-2); display: grid; gap: 12px; }
+  .notes p { margin: 0; }
+  .notes .lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .notes .prompt { border-left: 2px solid var(--accent); padding-left: 12px; font-style: normal; }
+  .notes .src { font-family: var(--mono); font-size: 12px; }
+
+  .warn {
+    margin: 0 16px 16px; padding: 11px 13px; background: var(--flag-bg); border: 1px solid var(--flag-line);
+    border-radius: 7px; font-size: 13px; color: var(--flag);
+  }
+  .warn b { font-weight: 700; }
+
+  /* ---- convo ad ---- */
+  .convo { margin-top: 26px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; }
+  .convo > h3 { margin: 0 0 4px; font-size: 18px; letter-spacing: -.012em; }
+  .convo > .sub { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+  .subject { padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 7px; font-size: 14.5px; margin-bottom: 18px; }
+  .subject .lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .msgs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .msg { border: 1px solid var(--line-soft); border-radius: 8px; padding: 14px; background: var(--ground); }
+  .msg h4 { margin: 0 0 9px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+  .msg p { margin: 0 0 9px; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+  .msg ol { margin: 0 0 9px; padding-left: 19px; font-size: 14px; color: var(--text-2); }
+  .msg ol li { margin-bottom: 3px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+  .btns span { font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1.5px solid var(--accent); color: var(--accent-text); }
+  .btns span.soft { border-color: var(--line); color: var(--muted); }
+
+  /* ---- concepts table ---- */
+  .tablewrap { margin-top: 22px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  caption { text-align: left; padding: 15px 16px 13px; font-size: 15px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--line); }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.dev { font-weight: 600; white-space: nowrap; }
+  td.hl { color: var(--text-2); }
+
+  footer { margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); display: grid; gap: 9px; }
+  footer p { margin: 0; max-width: 78ch; }
+  footer code { font-family: var(--mono); font-size: 12.5px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Production set &middot; ready to design</div>
+    <h1>Spade LinkedIn ads</h1>
+    <p class="standfirst">25 ads, each set the way it will publish: intro copy above, the creative with its headline, then the headline bar and button. Every ad carries the segment it can run in. Open the panel under any ad for its visual prompt and the library device it is built on.</p>
+  </header>
+
+  
+
+  <!-- ================= BANKS ================= -->
+    <section class="section">
+    <div class="section-head">
+      <h2>Problem awareness</h2>
+      <span class="count">9 ads</span>
+    </div>
+    <p class="throughline">What the buyer already feels, before Spade is in the frame. <b>Audience is set by the campaign, not by the ad:</b> anything marked <i>Both</i> runs the same creative in the fintech and the bank campaigns.</p>
+
+    <div class="grid">
+
+      <!-- 1.1 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">1.1</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">The descriptor was never written for the person reading it. Spade puts the real merchant, brand, and location on it before it reaches your app or your contact center.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">SQ*LADOLCEVITA*1059MIRAMARBEACHFL</p>
+          <p class="subcopy">Your cardholder doesn't know what this is either. So they call you, or they dispute it.</p>
+        </div>
+        <div class="bar"><span class="lihead">Cut the “what is this charge?” calls</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The descriptor set enormous in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, filling most of the frame and allowed to wrap mid-string the way it does in a real feed, with both asterisks left at full weight so the breaks in the string read as breaks. One line of subcopy beneath in white sans-serif at a fraction of the size. Nothing else. The string is the image.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, library/Problem/Problem 62.webp treatment</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 1.3 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">1.3</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">There is a name for the disputes that were never fraud. Spade puts the real merchant on the transaction, in the app and on the statement.</p>
+        </div>
+        <div class="field">
+          <p class="headline">A <em>false dispute</em> is a cardholder who couldn't read the merchant name.</p>
+          <p class="subcopy">Each one is a call or a dispute. Some become a chargeback and a card your customer loses for days.</p>
+        </div>
+        <div class="bar"><span class="lihead">Cut the disputes that were never fraud</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p><span class="lbl">Alternative headline</span>&ldquo;Your cardholder disputed a purchase they made. They couldn't read the name.&rdquo; Same claim, states the cost rather than naming the term. Adapted from copy Anna brought from another tool; her note was that a floating &ldquo;they&rdquo; needs an antecedent, so it opens on the cardholder.</p>
+            <p class="prompt"><span class="lbl">Prompt</span>Type-only, 1080&times;1350, deep green <code>#093328</code>. Two lines of heavy sans-serif with &ldquo;false dispute&rdquo; the only phrase in lime, so the term reads as the subject of the ad. Subcopy beneath in muted green. No imagery, generous margins.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, library/Problem/Problem 66.webp treatment</p>
+            <p><span class="lbl">Held back deliberately</span>The &ldquo;roughly 25% of disputes&rdquo; figure is a customer's estimate. It belongs on a proof surface, attributed, rather than in the creative.</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 1.4 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">1.4</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">There is no category code for a coffee shop, so a cafe and a fine-dining restaurant arrive the same way. Spade returns the category the business actually is, in under 40ms.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 5812</p>
+          <ul class="readings">
+            <li>A corner coffee shop.</li><li>A fine-dining restaurant.</li><li>A smoke shop.</li>
+          </ul>
+          <p class="headline">Same code. <em>There is nothing more specific.</em></p>
+          <p class="subcopy">Your dining rewards are built on categories this broad.</p>
+        </div>
+        <div class="bar"><span class="lihead">Set rewards on the category the business actually is</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5812</code> set very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, top half. Beneath it the three businesses on separate lines in white sans-serif, no glyphs or bullets. Headline under them in heavy sans-serif, one line of subcopy last. Equal weight on all three lines: the reader should notice for themselves that one of them does not belong.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, with the code carrying the grab</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 1.6 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">1.6</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">A cardholder who can read the merchant name recognizes their own charge, so they don't call and don't dispute. Spade puts the real merchant, brand, and location on it before it reaches them.</p>
+        </div>
+        <div class="field">
+          <p class="hero-string" style="font-size:clamp(24px,3.6vw,34px)">&ldquo;Oh, that charge is the nail place.&rdquo;</p>
+          <p class="headline">That's the call you didn't get.</p>
+        </div>
+        <div class="bar"><span class="lihead">Cut the calls by making the charge recognizable</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The line set large and centred on card fill <code>#EAF4DB</code>, 1080&times;1350, in the plain type of an app notification rather than a designed quote card. Headline beneath in heavy sans-serif. Nothing else in frame: no avatar, no phone, no quotation-mark graphics.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 62.webp (Announcement) type treatment</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 2.1 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">2.1</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">The prefix is the processor and the city. The business is cut off mid-name. Spade returns La Vie Nail Bar, San Ramon, with the category attached.</p>
+        </div>
+        <div class="field">
+          <p class="hero-string">SQ *SAN RAMON (LA VIE</p>
+          <p class="headline" style="font-size:20px">Your feed says <em>SQ *SAN RAMON</em>. Your customer went to a nail salon.</p>
+        </div>
+        <div class="bar"><span class="lihead">Show your customers a feed they recognize</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The Square-routed descriptor set large in monospace on deep green <code>#093328</code>, 1080&times;1350, with the <code>SQ*</code> prefix greyed back and the merchant name inside it left bright. Headline beneath. The string is the image.</p>
+            <p class="src"><span class="lbl">Source device</span>Interface recreation</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 2.2 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">2.2</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Merchants open, close, rename, and multiply every week, so the database is a forever team. Spade maintains it, and your engineers stay on your product.</p>
+        </div>
+        <div class="field ink">
+          <p class="headline">Maintaining your own merchant database</p>
+          <p class="subcopy" style="font-family:var(--mono);letter-spacing:.04em"><strong>CHOOSE DIFFICULTY</strong><br><span style="color:var(--field-lime)">&#9656; HARD</span> &nbsp;(build it)<br>&nbsp;&nbsp;&nbsp;EASY &nbsp;(Spade)</p>
+        </div>
+        <div class="bar"><span class="lihead">Stop maintaining a merchant database</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Retro game menu, &ldquo;CHOOSE DIFFICULTY&rdquo;, on ink <code>#090F05</code>, 1080&times;1350. Two options stacked: HARD highlighted in lime with a small &ldquo;(build it)&rdquo; sublabel, EASY greyed with &ldquo;(Spade)&rdquo;. Pixel type, scanline texture, nothing else. Headline above in the same pixel face.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 35.webp (Doss) &amp; Problem 60.webp (PerfectServe)</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 2.4 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">2.4</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">The feature is a sprint. The merchant database underneath it is a standing team, and it never appears on the roadmap. Spade maintains that record, so the thing you committed to ships.</p>
+        </div>
+        <div class="field ink">
+          <ul class="strings"><li class="hit">Q3 &middot; Merchant-level rewards</li><li>Blocked by: a verified record of every merchant in the US and Canada</li></ul>
+          <p class="headline">That's the dependency nobody scoped.</p>
+          <p class="subcopy">Spade already maintains it.</p>
+        </div>
+        <div class="bar"><span class="lihead">Ship the feature without building the database</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Two rows of a roadmap or ticket view rendered plainly in monospace on ink <code>#090F05</code>, 1080&times;1350: the first a scheduled item in lime, the second a blocker line in grey that is absurdly larger in scope than the item above it. No ticket-tool branding. Headline beneath in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 46.webp (Scytale, Apple To Do List) asymmetric-list treatment</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 2.6 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">2.6</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">The merchant list behind your rewards was accurate the week it was built. Spade keeps the matching current, so nobody has to own it.</p>
+        </div>
+        <div class="field">
+          <p class="headline">Somebody on your team <em>owns this spreadsheet.</em></p>
+          <p class="subcopy" style="font-family:var(--mono);font-size:12px">SBUXCALPOLMKTP &nbsp; still valid?<br>SQ *SAN RAMON (LA VIE &nbsp; dupe?<br>SQ*LOSMAGUEYESRESTAL &nbsp; renamed?</p>
+        </div>
+        <div class="bar"><span class="lihead">Never maintain a merchant list again</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>A faithful spreadsheet on card fill <code>#EAF4DB</code>, 1080&times;1350, rows of merchant names and MIDs, several cells flagged with stale-looking comment markers (&ldquo;still valid?&rdquo;, &ldquo;dupe?&rdquo;, &ldquo;changed name 3/24&rdquo;). One column of MIDs highlighted grey. Headline above, two lines.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 39.webp (PerfectServe, Spreadsheets)</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 2.8 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">2.8</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Locking a card to a brand means listing every name that brand posts under, including the ones that never say its name. Spade resolves all of them to the brand, so the lock holds.</p>
+        </div>
+        <div class="field ink">
+          <p class="headline">You locked the card to Amazon. <em>BLINK got declined.</em></p>
+          <p class="subcopy">Amazon owns Blink. Your allow-list doesn't know that.</p>
+        </div>
+        <div class="bar"><span class="lihead">Lock a card to a brand and have it hold</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Two lines on ink <code>#090F05</code>, 1080&times;1350, set as a card-control screen: an allow-list entry reading <code>Amazon</code> with a lime ALLOWED tag, and beneath it a transaction row reading <code>BLINK</code> with a grey DECLINED tag. Nothing else in frame. Headline above, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 20.webp (Pelion, Notification Stack) two-state treatment</p>
+          </div>
+        </details>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Product awareness</h2>
+      <span class="count">8 ads</span>
+    </div>
+    <p class="throughline">What Spade does, for a reader who now recognises the problem. The two ads marked for one segment are marked because of register, not because the problem is exclusive to it.</p>
+
+    <div class="grid">
+
+      <!-- 3.1 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.1</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">One brand runs through thousands of store- and acquirer-level merchant IDs that change constantly. Spade resolves every one of them to the brand behind it.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">WMSUPERCENTER#582</p>
+          <p class="headline">This is one Walmart store. <em>The brand runs on thousands of MIDs.</em></p>
+          <p class="subcopy">They change constantly, and nothing in them ties back to one brand.</p>
+        </div>
+        <div class="bar"><span class="lihead">Tie thousands of merchant IDs back to one brand</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The DE43 string set large in monospace with its original spacing preserved, lime on ink #090F05, 1080x1350, and the store number #582 in a brighter tint so the eye lands on it. Headline beneath. The string is the image.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image. String is Spade's own published example from docs.spade.com/reference/card-enrichment-guide</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.2 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.2</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">A store that opened last month arrives as a merchant ID nobody has seen, so the decision gets made on nothing. Spade matches it against a verified record of 99.9% of US and Canadian businesses.</p>
+        </div>
+        <div class="field">
+          <p class="hero-string">APPROVED</p>
+          <p class="headline">At a store that opened last month.</p>
+          <p class="subcopy">You have never seen this merchant. The decision got made anyway.</p>
+        </div>
+        <div class="bar"><span class="lihead">Decide on merchants your history has never seen</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The single word APPROVED set very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, upper third, like a terminal readout. Headline beneath it in heavy sans-serif, one line of subcopy last. Nothing else in frame.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 20.webp (Pelion, Notification Stack)</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.3 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.3</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">The truth about a transaction was never in the descriptor. Spade matches it against a verified record of nearly every business, inside the authorization window.</p>
+        </div>
+        <div class="field">
+          <p class="headline">Descriptor in. Verified merchant out. Under 40ms.</p>
+          <div class="diff"><span class="">SBUXCALPOLMKTP · SAN LUIS OBIS · MCC 5814</span><span class="on">Starbucks · San Luis Obispo, CA</span><span class="on">Food and Drink › Cafes</span></div>
+          <p class="subcopy">Every match is a lookup against a verified record of every business.</p>
+        </div>
+        <div class="bar"><span class="lihead">Match every transaction against a verified record</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Three horizontal bands on card fill #EAF4DB, 1080x1350: the raw DE43 descriptor in monospace, a thin arrow, then the resolved merchant with name, location, and the real category path. The middle band carries “&lt;40ms” small and set in lime. Headline above.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Product/Product 23.webp (Pelion, 3 Step Diagram)</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.4 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.4</span><span class="chip aud one">Fintech only</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Somebody has to match every transaction against the merchants you care about. Spade does that matching and returns your own decision on the enrichment response, tagged with your IDs.</p>
+        </div>
+        <div class="field ink">
+          <pre class="json">"display": {
+  "name": "Starbucks",
+  "categoryName": "Coffee Shop"
+},
+"actions": [{
+  "id": "trigger-1",
+  "type": "merchant_trigger",
+  "action": {
+    "type": "REWARD",
+    "rewardPercent": 5
+  }
+}]</pre>
+          <p class="headline">Register a merchant once. Your reward comes back on every transaction that matches it.</p>
+          
+        </div>
+        <div class="bar"><span class="lihead">Stop maintaining your own merchant list</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>A JSON response snippet set as the image, monospace, syntax-coloured with only the customer's own fields in lime, on ink #090F05, 1080x1350. No editor chrome, no window frame. Headline beneath.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image. Payload is the real actions response from docs.spade.com/reference/merchant-action-triggers-guide</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 3.6 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.6</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">A growing share of spend runs through a processor, a marketplace, or a wallet. Spade resolves the charge to the merchant that actually got paid.</p>
+        </div>
+        <div class="field">
+          <p class="headline">The processor's name is on the charge. <em>The business isn't.</em></p>
+          <div class="diff"><span class="">SQ*LOSMAGUEYESRESTALAREDOTX</span><span class="on">Los Magueyes · Restaurants</span></div>
+          <p class="subcopy">Spade returns the merchant that actually got paid.</p>
+        </div>
+        <div class="bar"><span class="lihead">See the merchant behind the processor</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The Square-routed descriptor in monospace on card fill #EAF4DB, 1080x1350, with the SQ* prefix greyed and the merchant name inside it left white, then the resolved business and category beneath in lime. Headline above.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Product/Product 17.webp (Pelion, With &amp; Without)</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.7 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.7</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">These rails were never designed to carry a merchant name, just free-text routing fields. Spade puts the same verified merchant on ACH, wire, and RTP.</p>
+        </div>
+        <div class="field ink">
+          <p class="headline">This is the merchant field on an ACH transfer.</p>
+          <p class="hero-string" style="color:var(--field-mute);font-size:clamp(20px,3vw,26px)">[ empty ]</p>
+          <p class="subcopy">Spade names who actually got paid, on ACH, wire, and RTP.</p>
+        </div>
+        <div class="bar"><span class="lihead">See who got paid on ACH, wire, and RTP</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>An empty field rendered as a labelled form row on ink #090F05, 1080x1350: the label reads “merchant” and the value is blank, with a thin cursor. The emptiness fills the frame. Headline above, one line of subcopy beneath.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image</p>
+            <p><span class="lbl">Needs a real artifact</span>The earlier version used a transfer descriptor from Spade's API docs, which is real but is not from the Hex export sheet, and it resolved to a gambling merchant. Pulled on both counts. This version claims only what v6 states (&ldquo;the raw data never says who got paid&rdquo;) and needs a real ACH or wire descriptor from Hex to get its grab back.</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.8 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.8</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Match rate is the number teams watch, and it slips as merchants rename, move, and open. Spade's record is updated continuously from the transaction volume running through it, so the number holds.</p>
+        </div>
+        <div class="field">
+          <p class="headline">Merchant matching you build yourself <em>peaks early.</em></p>
+          <p class="subcopy">Merchants rename, move, and open. The match rate drifts down from there.</p>
+        </div>
+        <div class="bar"><span class="lihead">Stop maintaining a merchant database</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>A single line on card fill #EAF4DB, 1080x1350, rising steeply at the start and then sloping gently downward across the rest of the frame, with month markers along the bottom. The decline is slight and unmistakable. Headline above.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 26.webp (Abnormal, Impact Chart) inverted</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 3.9 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">3.9</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">A category code names a kind of business, not which one. Rewards, spend controls, and everything you build with AI sit on top of it. Spade returns the verified merchant, brand, and location in under 40ms.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 5411</p>
+          <p class="headline">is not a merchant.</p>
+          <p class="subcopy">It names a category. Rewards, controls, and the AI you're building all need the business.</p>
+        </div>
+        <div class="bar"><span class="lihead">Enforce policy on verified merchants, not four-digit codes</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5411</code> set very large in monospace, lime on ink <code>#090F05</code>, 1080&times;1350, with &ldquo;is not a merchant.&rdquo; running on beneath it in heavy sans-serif so the two read as one sentence. One line of subcopy last, small. Nothing else.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab</p>
+          </div>
+        </details>
+      </article>
+
+</div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>New from the v6 narrative</h2>
+      <span class="count">1 ads</span>
+    </div>
+    <p class="throughline">Ads the newest messaging makes available. None of these names an unreleased product.</p>
+
+    <div class="grid">
+
+<!-- 6.2 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">6.2</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Everything you build with AI runs on knowing which business the transaction was with, and the category code does not carry it. Spade returns the verified merchant, brand, and location.</p>
+        </div>
+        <div class="field">
+          <div class="diff"><span class="">AMAZON MKTPLACE PMTS</span><span class="on">MCC 5942 · Book Stores</span></div>
+          <p class="headline">This is the record your AI would learn from.</p>
+          <p class="subcopy">Agents and products built on it repeat this, confidently, at scale.</p>
+        </div>
+        <div class="bar"><span class="lihead">Ground your AI in a verified merchant record</span><span class="cta">Learn more</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Type-led on card fill <code>#EAF4DB</code>, 1080&times;1350. The descriptor and the category code set first in grey monospace, close together so the pairing reads as one absurd fact, with &ldquo;Book Stores&rdquo; in lime. Headline beneath in heavy sans-serif, one line of subcopy last. No illustration.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 30.webp (Semgrep, Matrix) type-led treatment</p>
+          </div>
+        </details>
+      </article>
+
+</div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Conversion</h2>
+      <span class="count">2 ads</span>
+    </div>
+    <p class="throughline">Bottom of the funnel, both segments.</p>
+
+    <div class="grid">
+
+<!-- 5.6 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">5.6</span><span class="chip aud">Both</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Every transaction names a business, and the string it arrives in rarely says which one. Spade matches it against a verified record of 99.9% of US and Canadian businesses in under 40ms.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">99.9%</p>
+          <p class="headline">A verified record of 99.9% of US and Canadian businesses.</p>
+          <p class="subcopy">Every transaction matched against it at &gt;99% accuracy, in under 40ms p99. SOC 2 Type 2.</p>
+        </div>
+        <div class="bar"><span class="lihead">Match every transaction to the real business</span><span class="cta">Request demo</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The figure 99.9% set enormous in lime on ink #090F05, 1080x1350, occupying the middle third, with the qualifying line beneath it in white and the three published metrics small at the base. Nothing else.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Conversion/Conversion 19.webp (Semgrep, Graph) single-number treatment</p>
+          </div>
+        </details>
+      </article>
+
+        
+
+<!-- 5.7 -->
+      <article class="ad">
+        <div class="ad-top"><span class="ref">5.7</span><span class="chip aud one">Fintech only</span></div>
+        <div class="post">
+          <div class="byline"><div class="avatar">S</div><div class="who">Spade<span>Promoted</span></div></div>
+          <p class="intro">Maintaining merchant data is backend work no customer ever sees, and it quietly consumes senior engineering time. Spade keeps it current.</p>
+        </div>
+        <div class="field">
+          <p class="headline">How many of your engineers are maintaining merchant data right now?</p>
+          <div class="blank">___</div>
+          <p class="subcopy">Ask them what else they'd be shipping.</p>
+        </div>
+        <div class="bar"><span class="lihead">Put your engineers back on the roadmap</span><span class="cta">Request demo</span></div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>A single large blank underscore in lime on deep green #093328, 1080x1350, with the question above it in heavy sans-serif and the subcopy small beneath. Extreme negative space; the reader fills it in.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 49.webp (Redlist, Blank Loss)</p>
+          </div>
+        </details>
+      </article>
+
+    </div>
+  </section>
+
+    <section class="section">
+    <div class="section-head">
+      <h2>Built on your copy</h2>
+      <span class="count">5 ads</span>
+    </div>
+    <p class="throughline">Five ads written on the lines you brought in, kept as close to your words as the sourcing allows. Where a line needed a fact behind it, the fact is now checked and named in the panel. Where a word is a claim I cannot source, the ad is chipped rather than quietly softened.</p>
+
+    <div class="grid">
+
+      <!-- 7.1 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.1</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">Every rail arrives in its own format, and none of them spells out which business it was. Spade returns the same verified merchant record across card, ACH, wire, ATM, check, RTP, and P2P.</p>
+        </div>
+        <div class="field ink">
+          <ul class="strings">
+            <li class="hit">CARD</li><li class="hit">ACH</li><li class="hit">WIRE</li><li class="hit">ATM</li><li class="hit">CHECK</li><li class="hit">RTP</li><li class="hit">P2P</li>
+          </ul>
+          <p class="headline">One merchant record, <em>every payment rail.</em></p>
+          <p class="subcopy">The same verified business, whichever way the money moved.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Enrich every rail, not just cards</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The seven rail names stacked in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, evenly spaced and all the same size so no rail reads as the main one. Headline beneath in heavy sans-serif, one line of subcopy last. No icons, no rail logos, no arrows.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment</p>
+          </div>
+        </details>
+      </article>
+
+<!-- 7.3 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.3</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A card set to fuel only is set on a category code, and the code does not say which merchant it is. Spade returns the verified merchant and its location in under 40ms, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 5541</p>
+          <ul class="readings">
+            <li>SERVICE STATIONS</li>
+          </ul>
+          <p class="headline">&ldquo;Fuel only&rdquo; should mean <em>fuel only.</em></p>
+          <p class="subcopy">The code names a category. It does not say which merchant, or what else that merchant sells.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Enforce fuel only on the merchant, not the code</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5541</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description <code>SERVICE STATIONS</code> small directly beneath in white monospace. Headline under that in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 7.4 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.4</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A control set on a category code applies to every merchant in that category, not just the ones you meant. Spade returns the merchant, its brand, its street address, and its coordinates, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <pre class="json">"address": "1590 Dunlawton Ave",
+"city": "Port Orange",
+"latitude": 29.116727,
+"longitude": -81.019428</pre>
+          <p class="headline">Spend controls are only as good as the <em>merchant behind them.</em></p>
+          <p class="subcopy">Codes say fuel. Spade says which station, which street, which brand, in under 40ms.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Set controls on the merchant, not the category</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>The four response fields set as the image, monospace, syntax-coloured with the values in lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350. No editor chrome, no window frame, no map. Headline beneath in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image. Payload is the real location object from docs.spade.com/reference/card-enrichment-guide</p>
+          </div>
+        </details>
+      </article>
+
+      <!-- 7.5 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.5</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">The assistants, agents, and personalization you are shipping all run on strings written for settlement systems, not for reading. Spade returns the verified merchant, brand, category, and location behind each one.</p>
+        </div>
+        <div class="field ink">
+          <ul class="strings">
+            <li>SBUXCALPOLMKTP</li><li>SQ*LOSMAGUEYESRESTALAREDOTX</li><li>WMSUPERCENTER#582</li><li>AMAZON MKTPLACE PMTS</li>
+          </ul>
+          <p class="headline">Your AI is reading <em>gibberish.</em></p>
+          <p class="subcopy">Feed it verified merchant entities instead.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Ground your AI in verified merchants, not raw strings</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span>Four real descriptors stacked in monospace on ink <code>#090F05</code>, 1080&times;1350, in grey and deliberately dense so the block reads as noise before any word is read. Headline beneath in heavy sans-serif with &ldquo;gibberish&rdquo; in lime <code>#B2EB76</code>, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment, same device as 1.1</p>
+          </div>
+        </details>
+      </article>
+
+          <!-- 7.6 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.6</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A sponsor bank mandates the block, and the block is set on a category code. Spade returns the verified merchant and what it actually is, in under 40ms, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 7995</p>
+          <ul class="readings">
+            <li>BETTING, WAGERING, LOTTERY, GAMBLING TICKETS OR CHIPS</li>
+          </ul>
+          <p class="headline">&ldquo;No gambling&rdquo; should mean <em>no gambling.</em></p>
+          <p class="subcopy">A merchant carrying a different code is not in that category.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Block a category and have it hold</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 7995</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description small directly beneath in white monospace, set at whatever size fits the full string on one or two lines. Headline under that in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab. Same device as 7.3, run as a pair or a swap.</p>
+          </div>
+        </details>
+      </article>
+
+</div>
+  </section>
+
+  
+
+
+  <!-- ================= CONCEPTS ================= -->
+  <footer>
+    <p><b>Audience is a property of the ad, not of the section.</b> Most of these work for both segments: the problem is the same and only the vocabulary would shift. Two are marked <i>Banks only</i>: 1.5 because paying the card network for analyses of your own customers is bank behaviour, and 4.3 because it runs on deposit accounts. Two are marked <i>Fintech only</i>: 3.4 because a raw JSON payload is the wrong register for a Head of Cards, and 5.7 because it addresses the reader's engineers.</p>
+    <p><b>The four live campaigns</b> (Fibbler, all time to 2026-09-01): <code>b-abm_banks-titles</code> 7,550 impressions at 4.62% CTR, <code>b-abm_banks-function</code> 11,914 at 4.09%, <code>b-abm_fintech-function</code> 12,189 at 3.77%, <code>b-abm_fintech-titles</code> 7,646 at 3.68%. 39,299 impressions and $10,189 spend at a blended 4.0% CTR, against the 0.4% LinkedIn average. Segment is already a campaign dimension, so an ad marked <i>Both</i> is one creative uploaded to the fintech and the bank campaigns, not two ads.</p>
+    <p><b>Specs.</b> 1080&times;1350 (4:5) for every creative. No Spade logo in the image. The on-image headline is the first thing read, the visual second, the intro copy third, so the creative has to work with the intro copy covered. Keep on-image copy under about 34 words.</p>
+    <p><b>Reading order matters more than layout.</b> Where an ad leads with a transaction string, a category code, or a payload, that artifact is the grab: set it large enough to read at thumbnail size in a phone feed and let it sit alone. Headline beneath it, one line of subcopy last.</p>
+    <p><b>Every string is real.</b> Reproduce them exactly, including odd whitespace and capitalisation. Do not substitute a different merchant, code, or number, and do not add store numbers, match scores, coordinates, or JSON fields that are not shown.</p>
+    <p><b>Type only, no stock photography, no illustration of people.</b> The palette is ink <code>#090F05</code>, deep green <code>#093328</code>, olive <code>#3F7308</code>, lime <code>#B2EB76</code>, soft green <code>#D8E5CA</code>, card fill <code>#EAF4DB</code>. Fonts are NaN SuperX and FT Polar.</p>
+    <p><b>Run 5 to 7 ads per campaign.</b> Pause the worst-performing fifth each month and replace rather than editing in place.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
