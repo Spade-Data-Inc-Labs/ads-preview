@@ -239,6 +239,8 @@
   details[open] summary::after { content: "\2212"; }
   summary:hover { color: var(--accent-text); }
   summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .brief { border-left: 2px solid var(--accent); padding-left: 11px; }
+  .brief .lbl { color: var(--accent-text); }
   .notes { padding: 0 16px 16px; font-size: 13.5px; color: var(--text-2); display: grid; gap: 12px; }
   .notes p { margin: 0; }
   .notes .lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
@@ -291,14 +293,10 @@
     <h1>Spade LinkedIn ads</h1>
     <p class="standfirst">25 ads, each set the way it will publish: intro copy above, the creative with its headline, then the headline bar and button. Every ad carries the segment it can run in. Open the panel under any ad for its visual prompt and the library device it is built on.</p>
   </header>
-
-  
-
-  <!-- ================= BANKS ================= -->
     <section class="section">
     <div class="section-head">
       <h2>Problem awareness</h2>
-      <span class="count">9 ads</span>
+      <span class="count">12 ads</span>
     </div>
     <p class="throughline">What the buyer already feels, before Spade is in the frame. <b>Audience is set by the campaign, not by the ad:</b> anything marked <i>Both</i> runs the same creative in the fintech and the bank campaigns.</p>
 
@@ -319,6 +317,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Everything on the image is one raw card descriptor, exactly as the network sends it. No Spade output here. Set it large enough that the reader tries to decode it and fails.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The descriptor set enormous in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, filling most of the frame and allowed to wrap mid-string the way it does in a real feed, with both asterisks left at full weight so the breaks in the string read as breaks. One line of subcopy beneath in white sans-serif at a fraction of the size. Nothing else. The string is the image.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image, library/Problem/Problem 62.webp treatment</p>
           </div>
@@ -340,6 +339,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Type only, no data on the image. Both lines are Spade's voice.</p>
             <p><span class="lbl">Alternative headline</span>&ldquo;Your cardholder disputed a purchase they made. They couldn't read the name.&rdquo; Same claim, states the cost rather than naming the term. Adapted from copy Anna brought from another tool; her note was that a floating &ldquo;they&rdquo; needs an antecedent, so it opens on the cardholder.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Type-only, 1080&times;1350, deep green <code>#093328</code>. Two lines of heavy sans-serif with &ldquo;false dispute&rdquo; the only phrase in lime, so the term reads as the subject of the ad. Subcopy beneath in muted green. No imagery, generous margins.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image, library/Problem/Problem 66.webp treatment</p>
@@ -367,6 +367,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>MCC 5812</code> is a real network category code. The three lines under it are plain-English business types, not rows from a system. All three genuinely carry that code.</p>
             <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5812</code> set very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, top half. Beneath it the three businesses on separate lines in white sans-serif, no glyphs or bullets. Headline under them in heavy sans-serif, one line of subcopy last. Equal weight on all three lines: the reader should notice for themselves that one of them does not belong.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image, with the code carrying the grab</p>
           </div>
@@ -388,6 +389,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>The top line is a cardholder speaking. Set it as speech, not as data. No transaction string on this one.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The line set large and centred on card fill <code>#EAF4DB</code>, 1080&times;1350, in the plain type of an app notification rather than a designed quote card. Headline beneath in heavy sans-serif. Nothing else in frame: no avatar, no phone, no quotation-mark graphics.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 62.webp (Announcement) type treatment</p>
           </div>
@@ -409,6 +411,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>SQ *SAN RAMON (LA VIE</code> is the raw descriptor, truncated exactly as it arrives. The headline quotes it, so the two must match character for character.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The Square-routed descriptor set large in monospace on deep green <code>#093328</code>, 1080&times;1350, with the <code>SQ*</code> prefix greyed back and the merchant name inside it left bright. Headline beneath. The string is the image.</p>
             <p class="src"><span class="lbl">Source device</span>Interface recreation</p>
           </div>
@@ -430,6 +433,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>A recreated video-game difficulty menu. No transaction data. HARD and EASY are the two menu options and the bracketed words are their sublabels.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Retro game menu, &ldquo;CHOOSE DIFFICULTY&rdquo;, on ink <code>#090F05</code>, 1080&times;1350. Two options stacked: HARD highlighted in lime with a small &ldquo;(build it)&rdquo; sublabel, EASY greyed with &ldquo;(Spade)&rdquo;. Pixel type, scanline texture, nothing else. Headline above in the same pixel face.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 35.webp (Doss) &amp; Problem 60.webp (PerfectServe)</p>
           </div>
@@ -452,6 +456,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Two rows of a roadmap or ticket tool. Illustrative UI, not real data. The second row is the blocker and should look absurdly larger in scope than the first.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Two rows of a roadmap or ticket view rendered plainly in monospace on ink <code>#090F05</code>, 1080&times;1350: the first a scheduled item in lime, the second a blocker line in grey that is absurdly larger in scope than the item above it. No ticket-tool branding. Headline beneath in heavy sans-serif, one line of subcopy last.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 46.webp (Scytale, Apple To Do List) asymmetric-list treatment</p>
           </div>
@@ -473,6 +478,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>A spreadsheet. The left column is real raw descriptors, the right column is a person's own query note. The point is that a human maintains this by hand, so it should look worked-in, not designed.</p>
             <p class="prompt"><span class="lbl">Prompt</span>A faithful spreadsheet on card fill <code>#EAF4DB</code>, 1080&times;1350, rows of merchant names and MIDs, several cells flagged with stale-looking comment markers (&ldquo;still valid?&rdquo;, &ldquo;dupe?&rdquo;, &ldquo;changed name 3/24&rdquo;). One column of MIDs highlighted grey. Headline above, two lines.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 39.webp (PerfectServe, Spreadsheets)</p>
           </div>
@@ -494,19 +500,118 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Type only. Amazon and BLINK are brand names inside Spade's sentence, not data on screen. No logos.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Two lines on ink <code>#090F05</code>, 1080&times;1350, set as a card-control screen: an allow-list entry reading <code>Amazon</code> with a lime ALLOWED tag, and beneath it a transaction row reading <code>BLINK</code> with a grey DECLINED tag. Nothing else in frame. Headline above, one line of subcopy last.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 20.webp (Pelion, Notification Stack) two-state treatment</p>
           </div>
         </details>
       </article>
 
-</div>
+<!-- 7.3 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.3</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A card set to fuel only is set on a category code, and the code does not say which merchant it is. Spade returns the verified merchant and its location in under 40ms, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 5541</p>
+          <ul class="readings">
+            <li>SERVICE STATIONS</li>
+          </ul>
+          <p class="headline">&ldquo;Fuel only&rdquo; should mean <em>fuel only.</em></p>
+          <p class="subcopy">The code names a category. It does not say which merchant, or what else that merchant sells.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Enforce fuel only on the merchant, not the code</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>MCC 5541</code> is the code and <code>SERVICE STATIONS</code> is its official description, verbatim. Both are network data, not Spade output.</p>
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5541</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description <code>SERVICE STATIONS</code> small directly beneath in white monospace. Headline under that in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab</p>
+          </div>
+        </details>
+      </article>
+
+          <!-- 7.5 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.5</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">The assistants, agents, and personalization you are shipping all run on strings written for settlement systems, not for reading. Spade returns the verified merchant, brand, category, and location behind each one.</p>
+        </div>
+        <div class="field ink">
+          <ul class="strings">
+            <li>SBUXCALPOLMKTP</li><li>SQ*LOSMAGUEYESRESTALAREDOTX</li><li>WMSUPERCENTER#582</li><li>AMAZON MKTPLACE PMTS</li>
+          </ul>
+          <p class="headline">Your AI is reading <em>gibberish.</em></p>
+          <p class="subcopy">Feed it verified merchant entities instead.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Ground your AI in verified merchants, not raw strings</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Four raw descriptors, all real, all incoming. No Spade output on this image. Set them dense so the block reads as noise before a single word is read.</p>
+            <p class="prompt"><span class="lbl">Prompt</span>Four real descriptors stacked in monospace on ink <code>#090F05</code>, 1080&times;1350, in grey and deliberately dense so the block reads as noise before any word is read. Headline beneath in heavy sans-serif with &ldquo;gibberish&rdquo; in lime <code>#B2EB76</code>, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment, same device as 1.1</p>
+          </div>
+        </details>
+      </article>
+
+    <!-- 7.6 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.6</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A sponsor bank mandates the block, and the block is set on a category code. Spade returns the verified merchant and what it actually is, in under 40ms, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <p class="hero-string">MCC 7995</p>
+          <ul class="readings">
+            <li>BETTING, WAGERING, LOTTERY, GAMBLING TICKETS OR CHIPS</li>
+          </ul>
+          <p class="headline">&ldquo;No gambling&rdquo; should mean <em>no gambling.</em></p>
+          <p class="subcopy">A merchant carrying a different code is not in that category.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Block a category and have it hold</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>MCC 7995</code> and its official description, verbatim. Network data, not Spade output.</p>
+            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 7995</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description small directly beneath in white monospace, set at whatever size fits the full string on one or two lines. Headline under that in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab. Same device as 7.3, run as a pair or a swap.</p>
+          </div>
+        </details>
+      </article>
+
+    </div>
   </section>
 
   <section class="section">
     <div class="section-head">
       <h2>Product awareness</h2>
-      <span class="count">9 ads</span>
+      <span class="count">11 ads</span>
     </div>
     <p class="throughline">What Spade does, for a reader who now recognises the problem. The two ads marked for one segment are marked because of register, not because the problem is exclusive to it.</p>
 
@@ -528,6 +633,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>WMSUPERCENTER#582</code> is the raw descriptor with its spacing preserved. <code>#582</code> is a store number inside that string, not a separate ID field: tint it so the eye lands there, but do not label it.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The DE43 string set large in monospace with its original spacing preserved, lime on ink #090F05, 1080x1350, and the store number #582 in a brighter tint so the eye lands on it. Headline beneath. The string is the image.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image. String is Spade's own published example from docs.spade.com/reference/card-enrichment-guide</p>
           </div>
@@ -552,6 +658,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Four state labels lifted from a customer's own workflow. Not data and not a real UI. They should read as a chain that keeps going.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Four state labels stacked in monospace on ink <code>#090F05</code>, 1080&times;1350, reading top to bottom like a workflow that keeps going: the first in lime <code>#B2EB76</code>, the rest in grey, each on its own line with generous spacing. No arrows, no boxes, no flowchart furniture. Headline beneath in heavy sans-serif, one line of subcopy last. The length of the chain is the point.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 46.webp (Scytale, Apple To Do List) list treatment</p>
           </div>
@@ -574,6 +681,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><b>Two sides, and which is which matters.</b> <code>SBUXCALPOLMKTP &middot; SAN LUIS OBIS &middot; MCC 5814</code> is the incoming transaction: set it grey, on the left or on top. <code>Starbucks &middot; San Luis Obispo &middot; Cafes</code> is Spade's output: set it lime, on the right or below. The colour should tell the reader which is in and which is out without a label.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Three horizontal bands on card fill #EAF4DB, 1080x1350: the raw DE43 descriptor in monospace, a thin arrow, then the resolved merchant with name, location, and the real category path. The middle band carries “&lt;40ms” small and set in lime. Headline above.</p>
             <p class="src"><span class="lbl">Source device</span>library/Product/Product 23.webp (Pelion, 3 Step Diagram)</p>
           </div>
@@ -607,6 +715,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>A real API response in monospace. Only the fields the customer sets themselves should be lime, everything else grey. No editor window, no browser frame.</p>
             <p class="prompt"><span class="lbl">Prompt</span>A JSON response snippet set as the image, monospace, syntax-coloured with only the customer's own fields in lime, on ink #090F05, 1080x1350. No editor chrome, no window frame. Headline beneath.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image. Payload is the real actions response from docs.spade.com/reference/merchant-action-triggers-guide</p>
           </div>
@@ -629,6 +738,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Same two-sided device as 3.3. <code>SQ*LOSMAGUEYESRESTALAREDOTX</code> is the incoming descriptor in grey, <code>Los Magueyes &middot; Restaurants</code> is Spade's output in lime.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The Square-routed descriptor in monospace on card fill #EAF4DB, 1080x1350, with the SQ* prefix greyed and the merchant name inside it left white, then the resolved business and category beneath in lime. Headline above.</p>
             <p class="src"><span class="lbl">Source device</span>library/Product/Product 17.webp (Pelion, With &amp; Without)</p>
           </div>
@@ -651,6 +761,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>[ empty ]</code> is not a placeholder for you to fill. It is the artwork. It stands for the blank merchant field on an ACH transfer.</p>
             <p class="prompt"><span class="lbl">Prompt</span>An empty field rendered as a labelled form row on ink #090F05, 1080x1350: the label reads “merchant” and the value is blank, with a thin cursor. The emptiness fills the frame. Headline above, one line of subcopy beneath.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image</p>
             <p><span class="lbl">Needs a real artifact</span>The earlier version used a transfer descriptor from Spade's API docs, which is real but is not from the Hex export sheet, and it resolved to a gambling merchant. Pulled on both counts. This version claims only what v6 states (&ldquo;the raw data never says who got paid&rdquo;) and needs a real ACH or wire descriptor from Hex to get its grab back.</p>
@@ -673,6 +784,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>A line that rises then drifts gently down. Illustrative, not plotted data, so no axis values and no numbers anywhere.</p>
             <p class="prompt"><span class="lbl">Prompt</span>A single line on card fill #EAF4DB, 1080x1350, rising steeply at the start and then sloping gently downward across the rest of the frame, with month markers along the bottom. The decline is slight and unmistakable. Headline above.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 26.webp (Abnormal, Impact Chart) inverted</p>
           </div>
@@ -695,6 +807,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>The code and the headline are one sentence running across two type sizes: <code>MCC 5411</code> then <i>is not a merchant.</i> Do not set them as two separate statements.</p>
             <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5411</code> set very large in monospace, lime on ink <code>#090F05</code>, 1080&times;1350, with &ldquo;is not a merchant.&rdquo; running on beneath it in heavy sans-serif so the two read as one sentence. One line of subcopy last, small. Nothing else.</p>
             <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab</p>
           </div>
@@ -717,13 +830,79 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>AMAZON MKTPLACE PMTS</code> is the incoming descriptor and <code>MCC 5942 &middot; Book Stores</code> is the category the network assigns it. Both are the problem. There is no Spade output on this image.</p>
             <p class="prompt"><span class="lbl">Prompt</span>Type-led on card fill <code>#EAF4DB</code>, 1080&times;1350. The descriptor and the category code set first in grey monospace, close together so the pairing reads as one absurd fact, with &ldquo;Book Stores&rdquo; in lime. Headline beneath in heavy sans-serif, one line of subcopy last. No illustration.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 30.webp (Semgrep, Matrix) type-led treatment</p>
           </div>
         </details>
       </article>
 
-</div>
+<!-- 7.1 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.1</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">Every rail arrives in its own format, and none of them spells out which business it was. Spade returns the same verified merchant record across card, ACH, wire, ATM, check, RTP, and P2P.</p>
+        </div>
+        <div class="field ink">
+          <ul class="strings">
+            <li class="hit">CARD</li><li class="hit">ACH</li><li class="hit">WIRE</li><li class="hit">ATM</li><li class="hit">CHECK</li><li class="hit">RTP</li><li class="hit">P2P</li>
+          </ul>
+          <p class="headline">One merchant record, <em>every payment rail.</em></p>
+          <p class="subcopy">The same verified business, whichever way the money moved.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Enrich every rail, not just cards</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>Seven payment rail names at equal weight. Not data and not a diagram, so no arrows and no rail logos.</p>
+            <p class="prompt"><span class="lbl">Prompt</span>The seven rail names stacked in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, evenly spaced and all the same size so no rail reads as the main one. Headline beneath in heavy sans-serif, one line of subcopy last. No icons, no rail logos, no arrows.</p>
+            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment</p>
+          </div>
+        </details>
+      </article>
+
+    <!-- 7.4 -->
+      <article class="ad">
+        <div class="ad-top">
+          <span class="ref">7.4</span><span class="chip aud">Both</span>
+        </div>
+        <div class="post">
+          <div class="byline">
+            <div class="avatar">S</div>
+            <div class="who">Spade<span>Promoted</span></div>
+          </div>
+          <p class="intro">A control set on a category code applies to every merchant in that category, not just the ones you meant. Spade returns the merchant, its brand, its street address, and its coordinates, inside the authorization decision.</p>
+        </div>
+        <div class="field ink">
+          <pre class="json">"address": "1590 Dunlawton Ave",
+"city": "Port Orange",
+"latitude": 29.116727,
+"longitude": -81.019428</pre>
+          <p class="headline">Spend controls are only as good as the <em>merchant behind them.</em></p>
+          <p class="subcopy">Codes say fuel. Spade says which station, which street, which brand, in under 40ms.</p>
+        </div>
+        <div class="bar">
+          <span class="lihead">Set controls on the merchant, not the category</span><span class="cta">Learn more</span>
+        </div>
+        <details>
+          <summary>Visual prompt &amp; source</summary>
+          <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>All four lines are Spade's output, not the incoming transaction. This is the reverse of 3.3: there is no raw side on this one, so nothing should be greyed as “before”.</p>
+            <p class="prompt"><span class="lbl">Prompt</span>The four response fields set as the image, monospace, syntax-coloured with the values in lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350. No editor chrome, no window frame, no map. Headline beneath in heavy sans-serif, one line of subcopy last.</p>
+            <p class="src"><span class="lbl">Source device</span>Type-as-image. Payload is the real location object from docs.spade.com/reference/card-enrichment-guide</p>
+          </div>
+        </details>
+      </article>
+
+    </div>
   </section>
 
   <section class="section">
@@ -751,6 +930,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span>One published figure as the whole image. The three metrics along the base are also published Spade numbers, set small: they are proof, not the grab.</p>
             <p class="prompt"><span class="lbl">Prompt</span>The figure 99.9% set enormous in lime on ink #090F05, 1080x1350, occupying the middle third, with the qualifying line beneath it in white and the three published metrics small at the base. Nothing else.</p>
             <p class="src"><span class="lbl">Source device</span>library/Conversion/Conversion 19.webp (Semgrep, Graph) single-number treatment</p>
           </div>
@@ -775,6 +955,7 @@
         <details>
           <summary>Visual prompt &amp; source</summary>
           <div class="notes">
+            <p class="brief"><span class="lbl">What this is</span><code>___</code> is a blank the reader fills in their head. Leave it empty. Do not put a number in it.</p>
             <p class="prompt"><span class="lbl">Prompt</span>A single large blank underscore in lime on deep green #093328, 1080x1350, with the question above it in heavy sans-serif and the subcopy small beneath. Extreme negative space; the reader fills it in.</p>
             <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 49.webp (Redlist, Blank Loss)</p>
           </div>
@@ -783,190 +964,6 @@
 
     </div>
   </section>
-
-    <section class="section">
-    <div class="section-head">
-      <h2>Built on your copy</h2>
-      <span class="count">5 ads</span>
-    </div>
-    <p class="throughline">Five ads written on the lines you brought in, kept as close to your words as the sourcing allows. Where a line needed a fact behind it, the fact is now checked and named in the panel. Where a word is a claim I cannot source, the ad is chipped rather than quietly softened.</p>
-
-    <div class="grid">
-
-      <!-- 7.1 -->
-      <article class="ad">
-        <div class="ad-top">
-          <span class="ref">7.1</span><span class="chip aud">Both</span>
-        </div>
-        <div class="post">
-          <div class="byline">
-            <div class="avatar">S</div>
-            <div class="who">Spade<span>Promoted</span></div>
-          </div>
-          <p class="intro">Every rail arrives in its own format, and none of them spells out which business it was. Spade returns the same verified merchant record across card, ACH, wire, ATM, check, RTP, and P2P.</p>
-        </div>
-        <div class="field ink">
-          <ul class="strings">
-            <li class="hit">CARD</li><li class="hit">ACH</li><li class="hit">WIRE</li><li class="hit">ATM</li><li class="hit">CHECK</li><li class="hit">RTP</li><li class="hit">P2P</li>
-          </ul>
-          <p class="headline">One merchant record, <em>every payment rail.</em></p>
-          <p class="subcopy">The same verified business, whichever way the money moved.</p>
-        </div>
-        <div class="bar">
-          <span class="lihead">Enrich every rail, not just cards</span><span class="cta">Learn more</span>
-        </div>
-        <details>
-          <summary>Visual prompt &amp; source</summary>
-          <div class="notes">
-            <p class="prompt"><span class="lbl">Prompt</span>The seven rail names stacked in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, evenly spaced and all the same size so no rail reads as the main one. Headline beneath in heavy sans-serif, one line of subcopy last. No icons, no rail logos, no arrows.</p>
-            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment</p>
-          </div>
-        </details>
-      </article>
-
-<!-- 7.3 -->
-      <article class="ad">
-        <div class="ad-top">
-          <span class="ref">7.3</span><span class="chip aud">Both</span>
-        </div>
-        <div class="post">
-          <div class="byline">
-            <div class="avatar">S</div>
-            <div class="who">Spade<span>Promoted</span></div>
-          </div>
-          <p class="intro">A card set to fuel only is set on a category code, and the code does not say which merchant it is. Spade returns the verified merchant and its location in under 40ms, inside the authorization decision.</p>
-        </div>
-        <div class="field ink">
-          <p class="hero-string">MCC 5541</p>
-          <ul class="readings">
-            <li>SERVICE STATIONS</li>
-          </ul>
-          <p class="headline">&ldquo;Fuel only&rdquo; should mean <em>fuel only.</em></p>
-          <p class="subcopy">The code names a category. It does not say which merchant, or what else that merchant sells.</p>
-        </div>
-        <div class="bar">
-          <span class="lihead">Enforce fuel only on the merchant, not the code</span><span class="cta">Learn more</span>
-        </div>
-        <details>
-          <summary>Visual prompt &amp; source</summary>
-          <div class="notes">
-            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 5541</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description <code>SERVICE STATIONS</code> small directly beneath in white monospace. Headline under that in heavy sans-serif, one line of subcopy last.</p>
-            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab</p>
-          </div>
-        </details>
-      </article>
-
-      <!-- 7.4 -->
-      <article class="ad">
-        <div class="ad-top">
-          <span class="ref">7.4</span><span class="chip aud">Both</span>
-        </div>
-        <div class="post">
-          <div class="byline">
-            <div class="avatar">S</div>
-            <div class="who">Spade<span>Promoted</span></div>
-          </div>
-          <p class="intro">A control set on a category code applies to every merchant in that category, not just the ones you meant. Spade returns the merchant, its brand, its street address, and its coordinates, inside the authorization decision.</p>
-        </div>
-        <div class="field ink">
-          <pre class="json">"address": "1590 Dunlawton Ave",
-"city": "Port Orange",
-"latitude": 29.116727,
-"longitude": -81.019428</pre>
-          <p class="headline">Spend controls are only as good as the <em>merchant behind them.</em></p>
-          <p class="subcopy">Codes say fuel. Spade says which station, which street, which brand, in under 40ms.</p>
-        </div>
-        <div class="bar">
-          <span class="lihead">Set controls on the merchant, not the category</span><span class="cta">Learn more</span>
-        </div>
-        <details>
-          <summary>Visual prompt &amp; source</summary>
-          <div class="notes">
-            <p class="prompt"><span class="lbl">Prompt</span>The four response fields set as the image, monospace, syntax-coloured with the values in lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350. No editor chrome, no window frame, no map. Headline beneath in heavy sans-serif, one line of subcopy last.</p>
-            <p class="src"><span class="lbl">Source device</span>Type-as-image. Payload is the real location object from docs.spade.com/reference/card-enrichment-guide</p>
-          </div>
-        </details>
-      </article>
-
-      <!-- 7.5 -->
-      <article class="ad">
-        <div class="ad-top">
-          <span class="ref">7.5</span><span class="chip aud">Both</span>
-        </div>
-        <div class="post">
-          <div class="byline">
-            <div class="avatar">S</div>
-            <div class="who">Spade<span>Promoted</span></div>
-          </div>
-          <p class="intro">The assistants, agents, and personalization you are shipping all run on strings written for settlement systems, not for reading. Spade returns the verified merchant, brand, category, and location behind each one.</p>
-        </div>
-        <div class="field ink">
-          <ul class="strings">
-            <li>SBUXCALPOLMKTP</li><li>SQ*LOSMAGUEYESRESTALAREDOTX</li><li>WMSUPERCENTER#582</li><li>AMAZON MKTPLACE PMTS</li>
-          </ul>
-          <p class="headline">Your AI is reading <em>gibberish.</em></p>
-          <p class="subcopy">Feed it verified merchant entities instead.</p>
-        </div>
-        <div class="bar">
-          <span class="lihead">Ground your AI in verified merchants, not raw strings</span><span class="cta">Learn more</span>
-        </div>
-        <details>
-          <summary>Visual prompt &amp; source</summary>
-          <div class="notes">
-            <p class="prompt"><span class="lbl">Prompt</span>Four real descriptors stacked in monospace on ink <code>#090F05</code>, 1080&times;1350, in grey and deliberately dense so the block reads as noise before any word is read. Headline beneath in heavy sans-serif with &ldquo;gibberish&rdquo; in lime <code>#B2EB76</code>, one line of subcopy last.</p>
-            <p class="src"><span class="lbl">Source device</span>library/Problem/Problem 12.webp (raw-list hero) treatment, same device as 1.1</p>
-          </div>
-        </details>
-      </article>
-
-          <!-- 7.6 -->
-      <article class="ad">
-        <div class="ad-top">
-          <span class="ref">7.6</span><span class="chip aud">Both</span>
-        </div>
-        <div class="post">
-          <div class="byline">
-            <div class="avatar">S</div>
-            <div class="who">Spade<span>Promoted</span></div>
-          </div>
-          <p class="intro">A sponsor bank mandates the block, and the block is set on a category code. Spade returns the verified merchant and what it actually is, in under 40ms, inside the authorization decision.</p>
-        </div>
-        <div class="field ink">
-          <p class="hero-string">MCC 7995</p>
-          <ul class="readings">
-            <li>BETTING, WAGERING, LOTTERY, GAMBLING TICKETS OR CHIPS</li>
-          </ul>
-          <p class="headline">&ldquo;No gambling&rdquo; should mean <em>no gambling.</em></p>
-          <p class="subcopy">A merchant carrying a different code is not in that category.</p>
-        </div>
-        <div class="bar">
-          <span class="lihead">Block a category and have it hold</span><span class="cta">Learn more</span>
-        </div>
-        <details>
-          <summary>Visual prompt &amp; source</summary>
-          <div class="notes">
-            <p class="prompt"><span class="lbl">Prompt</span><code>MCC 7995</code> very large in monospace, lime <code>#B2EB76</code> on ink <code>#090F05</code>, 1080&times;1350, with its official description small directly beneath in white monospace, set at whatever size fits the full string on one or two lines. Headline under that in heavy sans-serif, one line of subcopy last.</p>
-            <p class="src"><span class="lbl">Source device</span>Type-as-image, the code carrying the grab. Same device as 7.3, run as a pair or a swap.</p>
-          </div>
-        </details>
-      </article>
-
-</div>
-  </section>
-
-  
-
-
-  <!-- ================= CONCEPTS ================= -->
-  <footer>
-    <p><b>Audience is a property of the ad, not of the section.</b> Most of these work for both segments: the problem is the same and only the vocabulary would shift. Two are marked <i>Banks only</i>: 1.5 because paying the card network for analyses of your own customers is bank behaviour, and 4.3 because it runs on deposit accounts. Two are marked <i>Fintech only</i>: 3.4 because a raw JSON payload is the wrong register for a Head of Cards, and 5.7 because it addresses the reader's engineers.</p>
-    <p><b>The four live campaigns</b> (Fibbler, all time to 2026-09-01): <code>b-abm_banks-titles</code> 7,550 impressions at 4.62% CTR, <code>b-abm_banks-function</code> 11,914 at 4.09%, <code>b-abm_fintech-function</code> 12,189 at 3.77%, <code>b-abm_fintech-titles</code> 7,646 at 3.68%. 39,299 impressions and $10,189 spend at a blended 4.0% CTR, against the 0.4% LinkedIn average. Segment is already a campaign dimension, so an ad marked <i>Both</i> is one creative uploaded to the fintech and the bank campaigns, not two ads.</p>
-    <p><b>Specs.</b> 1080&times;1350 (4:5) for every creative. No Spade logo in the image. The on-image headline is the first thing read, the visual second, the intro copy third, so the creative has to work with the intro copy covered. Keep on-image copy under about 34 words.</p>
-    <p><b>Reading order matters more than layout.</b> Where an ad leads with a transaction string, a category code, or a payload, that artifact is the grab: set it large enough to read at thumbnail size in a phone feed and let it sit alone. Headline beneath it, one line of subcopy last.</p>
-    <p><b>Every string is real.</b> Reproduce them exactly, including odd whitespace and capitalisation. Do not substitute a different merchant, code, or number, and do not add store numbers, match scores, coordinates, or JSON fields that are not shown.</p>
-    <p><b>Type only, no stock photography, no illustration of people.</b> The palette is ink <code>#090F05</code>, deep green <code>#093328</code>, olive <code>#3F7308</code>, lime <code>#B2EB76</code>, soft green <code>#D8E5CA</code>, card fill <code>#EAF4DB</code>. Fonts are NaN SuperX and FT Polar.</p>
-    <p><b>Run 5 to 7 ads per campaign.</b> Pause the worst-performing fifth each month and replace rather than editing in place.</p>
-  </footer>
 
 </div>
 
