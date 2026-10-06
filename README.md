@@ -12,4 +12,4 @@ Delete the repo when the ads are built.
 
 Open: https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp/
 
-Design preview of the Google Ads transaction enrichment landing page, for the design team. Earlier versions: https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v4/ and https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v5/. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
+Design preview of the Google Ads transaction enrichment landing page, for the design team. Earlier versions: https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v4/ https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v5/, and https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v6/. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
