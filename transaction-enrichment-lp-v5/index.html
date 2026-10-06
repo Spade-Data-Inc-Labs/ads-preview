@@ -71,13 +71,12 @@ header .c{height:68px;display:flex;align-items:center;justify-content:space-betw
 .anchors a:hover{color:var(--moss)}
 
 /* hero: spade.com /contact */
-.hero{padding:40px 0 72px}
-.htop{display:flex;flex-direction:column;align-items:center;text-align:center}
-.hero .eb{margin:8px 0 18px}
-.hero h1{max-width:1000px;font-size:clamp(38px,4vw,56px);text-wrap:balance}
+.hero{padding:52px 0 88px}
+.hero .c{display:grid;grid-template-columns:1fr 470px;gap:80px;align-items:start}
+.hero .eb{margin:26px 0 22px}
 .hero h1 code{font-size:.72em;white-space:nowrap;letter-spacing:-.06em}
-.hero .lead{margin-top:18px;max-width:620px}
-.hstats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:28px;width:100%;max-width:640px;text-align:left;border-top:1px solid var(--line)}
+.hero .lead{margin-top:24px;max-width:540px}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:36px;max-width:560px;border-top:1px solid var(--line)}
 .hstats div{padding:18px 18px 0 0}
 .hstats div+div{padding-left:18px;border-left:1px solid var(--line)}
 .hstats .num{display:block;font-family:var(--display);font-weight:500;font-size:32px;line-height:1;letter-spacing:-.02em;white-space:nowrap}
@@ -117,17 +116,35 @@ header .c{height:68px;display:flex;align-items:center;justify-content:space-betw
 
 
 /* hero right: product visual + one-question card (Revenu pattern A) */
-.hrow{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;max-width:1000px;margin:44px auto 0}
-.hvis{display:flex;flex-direction:column;align-items:center;width:100%}
-.hvis .ecard{max-width:360px}
-.qcard{--ch:16px;width:100%;max-width:460px;justify-self:start;background:var(--pale);padding:28px 30px}
-.qq{display:block;font-family:var(--display);font-weight:500;font-size:20px;line-height:1.25;margin-bottom:16px}
-.qcard .inp{margin-top:8px}
-.qcard .inp:first-of-type{margin-top:0}
-.qcard .row2 .inp{margin-top:8px}
-.qcard .btn{width:100%;height:47px;margin-top:14px}
-.qcard .back{display:block;margin:12px auto 0}
+.hform{display:flex;flex-direction:column;align-items:center}
+.hvis{display:flex;flex-direction:column;align-items:center;width:100%;margin-top:4px}
+.hvis .ecard{max-width:380px}
+.qcard{--ch:16px;width:100%;margin-top:24px;background:var(--pale);padding:24px 28px 20px;box-shadow:none}
+.qtitle{font-family:var(--display);font-weight:560;font-size:21px;line-height:1.2}
+.qcard .lbl{margin-top:14px}
+.qcard .btn{width:100%;height:47px;margin-top:12px}
 .sel{appearance:none;-webkit-appearance:none;border-radius:0;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23090f05'/%3E%3C/svg%3E") no-repeat right 16px center;cursor:pointer}
+.qcard .fine{margin-top:12px}
+/* modal */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px}
+.modal[hidden]{display:none}
+.mback{position:absolute;inset:0;background:rgba(9,15,5,.55)}
+.mdlg{--ch:18px;position:relative;width:min(820px,100%);max-height:calc(100vh - 48px);overflow:auto;display:grid;grid-template-columns:300px 1fr;background:#fff}
+.mside{background:var(--forest);color:#fff;padding:32px 28px}
+.mside .cap{color:var(--lime)}
+.mt{margin-top:14px;font-family:var(--display);font-weight:560;font-size:24px;line-height:1.15}
+.ms{margin-top:8px;color:#d6e3cb;font-size:15.5px}
+.mthen{list-style:none;counter-reset:t;margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.mthen li{display:flex;gap:12px;font-size:15px;line-height:1.35;color:#e4eedb;counter-increment:t}
+.mthen li::before{content:"0" counter(t);font-family:var(--mono);font-size:12px;color:var(--lime);padding-top:2px}
+.mfine{margin-top:24px;font-family:var(--mono);font-size:12px;color:#9cb08a}
+.mmain{position:relative;padding:28px 32px 30px;background:var(--pale)}
+.mclose{position:absolute;top:10px;right:14px;background:none;border:0;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
+.mvol{font-size:14.5px;color:var(--body);padding-right:28px}
+.mvol b{font-weight:400;color:var(--ink);font-family:var(--mono);font-size:13.5px}
+.mvol .back{margin:0 0 0 8px}
+.mmain .btn{width:100%;height:47px;margin-top:22px}
+
 /* logo bar */
 .logobar{padding:0 0 40px;text-align:center}
 .logobar p{font-family:var(--mono);font-size:13.5px;letter-spacing:-.02em}
@@ -341,7 +358,7 @@ details p{margin-top:12px;color:var(--body);font-size:17px;line-height:1.5;max-w
 body.clean .review{display:none}
 
 @media (max-width:1180px){
-  .hrow{gap:36px}
+  .hero .c{grid-template-columns:1fr 440px;gap:48px}
   .mapgrid{gap:48px}
   .mappanel{padding:26px 40px}
 }
@@ -350,18 +367,32 @@ body.clean .review{display:none}
   header .c{height:58px}
   .anchors{display:none}
   .navbtn .long{display:none}
-  .hero{padding:18px 0 48px}
-  .hero .eb{font-size:11px;margin:4px 0 12px}
-  .hero h1{font-size:32px}
-  .hero .lead{font-size:16.5px}
+  .hero{padding:20px 0 56px}
+  .hero .c{display:flex;flex-direction:column;gap:0}
+  .hcopy{display:contents}
+  .hero .eb{order:1;margin:4px 0 14px;font-size:11px}
+  .hero h1{order:2;font-size:33px}
+  .hform{display:contents}
+  .qcard{order:3;margin-top:22px!important}
+  .hero .lead{order:4;margin-top:32px;font-size:17px}
+  .hvis{order:6;margin-top:28px}
+  .qcard{margin-top:0;padding:20px 18px 16px;--ch:12px}
+  .qtitle{font-size:19px}
+  .mdlg{grid-template-columns:1fr}
+  .mside{padding:20px 20px 16px}
+  .mside .mthen,.mside .mfine{display:none}
+  .mt{font-size:20px;margin-top:8px}
+  .mmain{padding:20px 18px 22px}
+  .hstats{order:5;margin-top:20px}
   .hstats div{padding:14px 10px 0 0}
   .hstats div+div{padding-left:10px}
   .hstats .num{font-size:24px}
   .hstats p{font-size:13.5px}
-  .hero .c{display:flex;flex-direction:column;gap:0}
-  .htop,.hrow{display:contents}
-  .hero .eb{order:1}.hero h1{order:2}.qcard{order:3;margin-top:20px;padding:20px 18px;--ch:12px;max-width:none}.hero .lead{order:4;margin-top:28px}.hstats{order:5}.hvis{order:6;margin-top:32px}
-  .qq{font-size:18px}
+  .fpanel{--ch:12px;padding:22px 18px 22px}
+  .ftitle{font-size:21px}
+  .fsteps{margin-bottom:16px}
+  .lbl{margin-top:14px}
+  .opt{height:44px;margin-top:6px}
   .logobar{padding-bottom:16px}
   .logos{gap:24px 36px}
   .logos img{height:19px}
@@ -438,7 +469,7 @@ body.clean .review{display:none}
 <!-- HERO: spade.com /contact pattern -->
 <section class="hero" id="test">
   <div class="c">
-    <div class="htop">
+    <div class="hcopy">
       <p class="eb" id="eyebrow">[Comparing transaction enrichment providers?]</p>
       <h1 class="h1" id="h1">Transaction enrichment that knows <code>SQ *PHILZ MOBILE</code> is Philz Coffee.</h1>
       <p class="lead" id="sub">Spade looks every transaction up in its merchant graph, a verified record of 99.9% of US and Canadian businesses, and returns the verified merchant.</p>
@@ -448,7 +479,8 @@ body.clean .review{display:none}
         <div><span class="num">Every rail</span><p>one counterparty ID per business</p></div>
       </div>
     </div>
-    <div class="hrow">
+
+    <div class="hform">
       <div class="hvis" aria-label="A raw transaction string resolved to the verified merchant">
         <div class="raw ct"><i></i><i></i><i></i><i></i><span class="k">Transaction</span><span class="s">SQ *PHILZ MOBILE</span></div>
         <div class="arrow"></div>
@@ -462,30 +494,11 @@ body.clean .review{display:none}
         </div>
       </div>
       <form class="qcard chamfer" id="qform" onsubmit="return false" novalidate>
-        <div class="stp on" id="s1">
-          <label class="qq" for="vol">How many transactions do you process each month?</label>
-          <select class="inp sel" id="vol"><option value="" selected disabled>Select an option</option><option>Under 100,000</option><option>100,000 to 1 million</option><option>1 million to 10 million</option><option>More than 10 million</option></select>
-          <button class="btn" type="button" id="qnext">Next &rarr;</button>
-        </div>
-        <div class="stp" id="s2">
-          <p class="qq">Where should we send the invite?</p>
-          <input class="inp" id="email" type="email" autocomplete="email" placeholder="Work email" aria-label="Work email">
-          <div id="sitewrap" hidden><input class="inp" id="site" type="url" placeholder="Company website" aria-label="Company website"></div>
-          <div class="row2"><input class="inp" id="fn" autocomplete="given-name" placeholder="First name" aria-label="First name"><input class="inp" id="ln" autocomplete="family-name" placeholder="Last name" aria-label="Last name"></div>
-          <input class="inp" id="co" autocomplete="organization" placeholder="Company" aria-label="Company">
-          <button class="btn" type="button" id="tocal">Pick a time &rarr;</button>
-          <button class="back" type="button" id="to1">&larr; Back</button>
-        </div>
-        <div class="stp" id="s3">
-          <p class="qq">Pick a time with our enrichment team</p>
-          <div class="cal">
-            <span class="dy">Mon</span><span class="dy">Tue</span><span class="dy">Wed</span><span class="dy">Thu</span><span class="dy">Fri</span>
-            <button type="button">10:00</button><button type="button">9:30</button><button type="button">11:00</button><button type="button">1:00</button><button type="button">10:30</button>
-            <button type="button">2:00</button><button type="button">1:30</button><button type="button">3:00</button><button type="button">4:00</button><button type="button">2:30</button>
-          </div>
-          <div class="booked" id="booked">You're booked. We'll send the invite and how to share your sample.</div>
-          <button class="back" type="button" id="to2">&larr; Back</button>
-        </div>
+        <p class="qtitle">Test Spade on your own transactions</p>
+        <label class="lbl" for="vol">How many transactions do you process each month?</label>
+        <select class="inp sel" id="vol"><option value="" selected disabled>Select an option</option><option>Under 100,000</option><option>100,000 to 1 million</option><option>1 million to 10 million</option><option>More than 10 million</option></select>
+        <button class="btn" type="button" id="qnext">Next &rarr;</button>
+        <p class="fine">No PII needed · SOC 2 Type 2</p>
       </form>
     </div>
   </div>
@@ -715,6 +728,42 @@ body.clean .review{display:none}
 <div class="legal"><div class="c"><span class="logo"><svg viewBox="0 0 2404 494" aria-hidden="true"><g fill="#18280E"><path d="M229.599 301.432L180.896 294.581C34.7877 274.029 6.95754 205.522 6.95754 137.015C6.95754 61.6566 69.5753 0 208.726 0C333.962 0 410.495 47.9551 410.495 143.865L403.537 150.716H292.216L285.259 143.865C285.259 116.462 264.386 95.9102 208.726 95.9102C153.066 95.9102 125.236 109.612 125.236 137.015C125.236 164.418 153.066 171.268 201.769 178.119L250.471 184.97C396.58 205.522 424.41 267.179 424.41 342.537C424.41 417.895 368.749 493.253 215.684 493.253C76.5329 493.253 0 438.447 0 335.686L6.95754 328.835H118.278L125.236 335.686C125.236 376.79 153.066 397.342 215.684 397.342C271.344 397.342 306.132 383.641 306.132 349.387C306.132 315.134 278.301 308.283 229.599 301.432Z"/><path d="M1190.81 404.193L1176.89 397.342H1016.87L1002.96 404.193L975.125 479.551L968.168 486.402H884.677L877.72 479.551V390.492L1030.79 13.7015L1037.74 6.85076H1156.02L1162.98 13.7015L1316.04 390.492V479.551L1309.09 486.402H1225.6L1218.64 479.551L1190.81 404.193ZM1044.7 287.731L1051.66 294.581H1142.11L1149.06 287.731L1100.36 157.567H1093.4L1044.7 287.731Z"/><path d="M1544.27 486.44H1370.33L1363.37 479.589V13.7015L1370.33 6.85076H1544.27C1718.21 6.85076 1787.78 95.9103 1787.78 246.626C1787.78 397.342 1718.21 486.402 1544.27 486.402V486.44ZM1551.22 109.612H1495.56L1488.61 116.462V376.79L1495.56 383.641H1551.22C1627.76 383.641 1662.55 356.238 1662.55 246.626C1662.55 137.015 1627.76 109.612 1551.22 109.612Z"/><path d="M2196.21 486.44H1841.38L1834.42 479.589V13.7015L1841.38 6.85076H2196.21L2203.17 13.7015V102.761L2196.21 109.612H1966.61L1959.65 116.462V184.97L1966.61 191.821H2182.3L2189.25 198.671V287.731L2182.3 294.581H1966.61L1959.65 301.432V376.79L1966.61 383.641H2196.21L2203.17 390.492V479.551L2196.21 486.402V486.44Z"/><path d="M702.405 6.85076H467.225V472.701L474.183 486.402H585.503L592.461 479.551V390.492L599.418 383.641L702.405 383.716C806.768 383.716 876.344 328.91 876.344 233V157.567C876.344 61.6566 806.768 6.85076 702.405 6.85076ZM751.108 233C751.108 274.105 730.235 280.955 702.405 280.955V280.88H599.418L592.461 274.029V116.462L599.418 109.612H702.405C730.235 109.612 751.108 116.462 751.108 157.567V233Z"/><path d="M2403.03 24.354L2385.25 6.85076H2286.09L2268.31 24.354L2330.97 191.821H2340.37L2403.03 24.354Z"/></g></svg></span><nav><a href="https://www.spade.com/terms/">Terms of Service</a><a href="https://www.spade.com/privacy/">Privacy Policy</a><a href="https://docs.spade.com">API docs</a></nav><span>© Spade 2026</span></div></div>
 
 
+<!-- Step 2 and 3 open after the hero question (Chili Piper pattern) -->
+<div class="modal" id="modal" hidden>
+  <div class="mback" data-close></div>
+  <div class="mdlg chamfer" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <aside class="mside">
+      <p class="cap">Step <span id="mstep">2</span> of 3</p>
+      <p class="mt" id="mtitle">Test Spade on your own transactions</p>
+      <p class="ms">30 minutes with our enrichment team.</p>
+      <ol class="mthen"><li>Send a sample, hard cases included.</li><li>Get it back enriched, with match rate and accuracy.</li><li>Check it yourself, before any integration.</li></ol>
+      <p class="mfine">No PII needed · SOC 2 Type 2</p>
+    </aside>
+    <div class="mmain">
+      <button class="mclose" type="button" data-close aria-label="Close">&times;</button>
+      <div class="stp on" id="s2">
+        <p class="mvol">Monthly transactions: <b id="volv"></b> <button class="back" type="button" data-close>Change</button></p>
+        <label class="lbl" for="email">Work email</label>
+        <input class="inp" id="email" type="email" autocomplete="email" placeholder="Enter your work email">
+        <div id="sitewrap" hidden><label class="lbl" for="site">Company website</label><input class="inp" id="site" type="url" placeholder="Enter your company website"></div>
+        <div class="row2"><div><label class="lbl" for="fn">First name</label><input class="inp" id="fn" autocomplete="given-name" placeholder="First name"></div><div><label class="lbl" for="ln">Last name</label><input class="inp" id="ln" autocomplete="family-name" placeholder="Last name"></div></div>
+        <label class="lbl" for="co">Company</label><input class="inp" id="co" autocomplete="organization" placeholder="Enter your company">
+        <button class="btn" type="button" id="tocal">Pick a time</button>
+      </div>
+      <div class="stp" id="s3">
+        <span class="lbl">Pick a time with our enrichment team</span>
+        <div class="cal">
+          <span class="dy">Mon</span><span class="dy">Tue</span><span class="dy">Wed</span><span class="dy">Thu</span><span class="dy">Fri</span>
+          <button type="button">10:00</button><button type="button">9:30</button><button type="button">11:00</button><button type="button">1:00</button><button type="button">10:30</button>
+          <button type="button">2:00</button><button type="button">1:30</button><button type="button">3:00</button><button type="button">4:00</button><button type="button">2:30</button>
+        </div>
+        <div class="booked" id="booked">You're booked. We'll send the invite and how to share your sample.</div>
+        <button class="back" type="button" id="tos2">&larr; Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 const $=id=>document.getElementById(id);
@@ -738,11 +787,13 @@ const AG={
  merchantapi:{l:"Merchant data API",e:"Merchant data API",h:"Merchant data on every transaction, from a verified record of every business.",s:"Match a transaction, or look a business up directly, and get the verified merchant, brand, category, and location."},
  names:{l:"Merchant names",e:"Merchant names",h:"Merchant names your customers recognize, on every transaction.",s:"`PMUSA 303010 PHILADELP` was ParkMobile. Spade returns the verified merchant's name and logo."}
 };
-// Multi-step form: one question in the hero; Next swaps the same card to contact, then to the calendar
-function step(n){['s1','s2','s3'].forEach((id,i)=>$(id).classList.toggle('on',i+1===n));}
-$('qnext').addEventListener('click',()=>{step(2);$('email').focus();});
-$('to1').addEventListener('click',()=>step(1));
-$('tocal').addEventListener('click',()=>step(3)); $('to2').addEventListener('click',()=>step(2));
+// Multi-step form: the hero asks one question; Next opens the details step and the calendar
+const modal=$('modal');
+function step(n){$('s2').classList.toggle('on',n===2);$('s3').classList.toggle('on',n===3);$('mstep').textContent=n;}
+$('qnext').addEventListener('click',()=>{const v=$('vol');$('volv').textContent=v.value||'Not answered';step(2);modal.hidden=false;document.body.style.overflow='hidden';setTimeout(()=>$('email').focus(),50);});
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{modal.hidden=true;document.body.style.overflow='';}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden){modal.hidden=true;document.body.style.overflow='';}});
+$('tocal').addEventListener('click',()=>step(3)); $('tos2').addEventListener('click',()=>step(2));
 $('email').addEventListener('input',e=>{$('sitewrap').hidden=!/@(gmail|googlemail|icloud|me|mac|yahoo|hotmail|outlook|aol|proton|protonmail)\./i.test(e.target.value);});
 document.querySelectorAll('.cal button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.cal button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$('booked').style.display='block';}));
 
