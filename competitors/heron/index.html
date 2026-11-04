@@ -659,7 +659,7 @@ body.clean .review{display:none}
       <thead><tr><th></th><th class="sp">Spade</th><th>Heron</th></tr></thead>
       <tbody>
         <tr><th>Built for</th><td class="sp">Card and payment products: spend controls, merchant locks, rewards, and the app your customers use</td><td>Underwriting automation for small-business lenders, brokers, and funders</td></tr>
-        <tr><th>How the merchant is identified</th><td class="sp">Looked up in Spade's Merchant Graph, a verified record of 99.9% of US and Canadian businesses</td><td>Extracted from the description string, the one field its merchant endpoint takes; without a database match, you get a cleaned piece of the string</td></tr>
+        <tr><th>How the merchant is identified</th><td class="sp">Looked up in Spade's Merchant Graph, a verified record of 99.9% of US and Canadian businesses</td><td>Read from the description string, the only field it takes. With no match in its database, you get back part of the string.</td></tr>
         <tr><th>Coverage</th><td class="sp">99.9% of US and Canadian businesses, published</td><td>No published coverage figure</td></tr>
         <tr><th>Accuracy</th><td class="sp">&gt;99%, published</td><td>No published accuracy figure; a confidence score on each category</td></tr>
         <tr><th>Real time</th><td class="sp">&lt;40ms p99, inside the authorization window</td><td>200 to 500ms for its auth-flow merchant endpoint, per its docs</td></tr>
