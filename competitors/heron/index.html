@@ -441,6 +441,25 @@ body.clean .review{display:none}
 .accline{max-width:820px;margin-top:28px;font-size:18px;line-height:1.45;color:var(--body)}
 .accline b{color:var(--ink);font-weight:500}
 @media (max-width:900px){.acc90{padding-top:72px}.acc90 .stats{grid-template-columns:1fr}}
+
+.lookup{background:var(--forest);color:#e9f2df;padding:110px 0;margin-top:96px}
+.lookup .eb{color:var(--lime);margin-bottom:16px}
+.lookup .h2{color:#fff;max-width:780px}
+.lookup .lead{color:#c9d8bf;max-width:720px;margin-top:16px}
+.lk3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.lk{border:1px solid rgba(178,235,118,.35);padding:28px 26px 30px}
+.lk .sn{font-family:var(--mono);font-size:13px;color:var(--lime);letter-spacing:.08em}
+.lk b{display:block;font-size:22px;line-height:1.2;color:#fff;margin:14px 0 10px;font-weight:500}
+.lk p{font-size:15.5px;line-height:1.5;color:#c9d8bf;margin:0}
+.lk code{font-family:var(--mono);font-size:13px;color:var(--lime)}
+.lkfoot{margin-top:22px;font-family:var(--mono);font-size:11.5px;line-height:1.5;color:#9db08f}
+.lookup .cmpcta{margin-top:32px}
+@media (max-width:860px){.lk3{grid-template-columns:1fr}.lookup{padding:72px 0}}
+
+.lk .lkr{border-top:1px solid rgba(178,235,118,.22);margin-top:14px;padding-top:12px}
+.lk .lab{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#9db08f;margin-bottom:5px}
+.lk .lkr.g .lab{color:var(--lime)}
+.lk .lkr.g p{color:#fff}
 </style>
 
 
@@ -520,8 +539,23 @@ body.clean .review{display:none}
     <div class="bbox ct" style="left:6%;top:-20px"><i></i><i></i><i></i><i></i><span class="k">Transaction</span>PY *KBC01 BRAYTON</div>
     <div class="bbox ct" style="right:9%;top:10px"><i></i><i></i><i></i><i></i><span class="k">MCC</span>5812 · Restaurants</div>
     <div class="bbox ct faint" style="left:2%;bottom:20px"><i></i><i></i><i></i><i></i><span class="k">Merchant name</span>Not in the string</div>
-    <h2><span>A spend control can only block a merchant it can find.</span> <span class="g"><code>PY *KBC01 BRAYTON</code> arrives coded as a restaurant. Spade looks it up: Kaladi Brothers Coffee, a café on Brayton Drive in Anchorage.</span></h2>
+    <h2><span>A model can't invent a merchant the string never named.</span> <span class="g"><code>PY *KBC01 BRAYTON</code> is coded as a restaurant. Spade looks it up: Kaladi Brothers Coffee, a café on Brayton Drive in Anchorage.</span></h2>
     <div class="tcard" style="right:4%;bottom:-36px"><span class="lt" style="background:#7a3b1d;color:#fff">K</span><div><b>Kaladi Brothers Coffee<span class="via">via Payrix</span></b><small>Cafes · 6921 Brayton Dr, Anchorage</small></div><span class="amt">−$5.25</span></div>
+  </div>
+</section>
+
+<!-- THE MERCHANT GRAPH: forest band -->
+<section class="lookup" id="lookup">
+  <div class="c">
+    <p class="eb">[The Merchant Graph]</p>
+    <h2 class="h2">A model guesses the merchant. Spade looks it up.</h2>
+    <p class="lead">Heron reads the descriptor alone, with its models and its own merchant database. Spade looks every transaction up in the Merchant Graph, its verified record of 99.9% of US and Canadian businesses and how they relate.</p>
+            <div class="lk3">
+      <div class="lk"><span class="sn">01</span><b>More accurate</b><p>The descriptor doesn&#39;t carry the verified merchant, so a model can only infer it. Spade matches it to a verified business: over 99% accurate in your app, rewards, and AI.</p></div>
+      <div class="lk"><span class="sn">02</span><b>More coverage</b><p>Heron returns a merchant only when its database has a match, and its merchant lock declines the rest. The Merchant Graph covers 99.9% of US and Canadian businesses, down to the small, local, and new ones.</p></div>
+      <div class="lk"><span class="sn">03</span><b>Fast enough for authorization</b><p>Heron&#39;s docs put its auth-flow response at 200 to 500ms. A lookup in the Merchant Graph returns in under 40ms p99, in time to approve, block, or reward the purchase.</p></div>
+    </div>
+    <div class="cmpcta"><a class="btn lime" href="#demo">Get a demo</a></div>
   </div>
 </section>
 
@@ -662,8 +696,8 @@ body.clean .review{display:none}
         <tr><th>How the merchant is identified</th><td class="sp">Looked up in Spade's Merchant Graph, a verified record of 99.9% of US and Canadian businesses</td><td>Works only from the descriptor, a cryptic string that doesn't carry the verified merchant. When it can't find a match, you get the string back, trimmed.</td></tr>
         <tr><th>Coverage</th><td class="sp">99.9% of US and Canadian businesses, published</td><td>No published coverage figure</td></tr>
         <tr><th>Accuracy</th><td class="sp">&gt;99%, published</td><td>No published accuracy figure; a confidence score on each category</td></tr>
-        <tr><th>Real time</th><td class="sp">&lt;40ms p99, inside the authorization window</td><td>200 to 500ms for its auth-flow merchant endpoint, per its docs</td></tr>
-        <tr><th>Spend controls</th><td class="sp">Register merchants, brands, or granular categories once and get the decision in the same response</td><td>Store an allowed merchant per card and compare IDs on each swipe; when it can't match the merchant, the purchase is declined</td></tr>
+        <tr><th>Real time</th><td class="sp">&lt;40ms p99, inside the authorization window</td><td>200 to 500ms for its auth-flow endpoint, per its docs, which can use up a card program&#39;s whole decision budget</td></tr>
+        <tr><th>Spend controls</th><td class="sp">Register merchants, brands, or granular categories once and get the decision in the same response, in under 40ms</td><td>Store an allowed merchant per card and compare IDs on each swipe; when it can't match the merchant, the purchase is declined</td></tr>
       </tbody>
     </table>
     </div>
@@ -692,6 +726,7 @@ body.clean .review{display:none}
     <div><p class="eb">[FAQ]</p><h2 class="h2">Questions teams ask before they switch</h2></div>
     <div>
       <details open><summary>How is Spade different from Heron?</summary><p>Heron extracts the merchant from the transaction description and returns it when it finds a match in its database; its docs put the auth-flow response at 200 to 500ms. Spade looks every card transaction up in its Merchant Graph, a verified record of 99.9% of US and Canadian businesses: over 99% accurate, in under 40ms p99.</p></details>
+      <details><summary>Can&#39;t we use an LLM for this?</summary><p>An LLM can tidy a descriptor, but it can&#39;t name a merchant the descriptor never mentions. Spade looks each one up in a verified record of 99.9% of US and Canadian businesses, in under 40ms p99.</p></details>
       <details><summary>Can we test Spade against our Heron output?</summary><p>Yes. Send a sample of your recent transactions and we'll return it enriched, so you can compare the results with your current provider's.</p></details>
       <details><summary>Can Spade run our spend controls at authorization?</summary><p>Yes. Keep matching against the merchant lists you run today, or register the merchants, brands, or granular categories you want to allow or block and get the decision back with the verified merchant, in under 40ms p99.</p></details>
       <details><summary>How hard is it to switch?</summary><p>Unit had its enrichment live in less than two weeks. You can start with a sample of your past transactions, before anything touches your live flow.</p></details>
