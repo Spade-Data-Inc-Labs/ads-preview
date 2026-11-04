@@ -659,7 +659,7 @@ body.clean .review{display:none}
       <thead><tr><th></th><th class="sp">Spade</th><th>Heron</th></tr></thead>
       <tbody>
         <tr><th>Built for</th><td class="sp">Card and payment products: spend controls, merchant locks, rewards, and the app your customers use</td><td>Underwriting automation for small-business lenders, brokers, and funders</td></tr>
-        <tr><th>How the merchant is identified</th><td class="sp">Looked up in Spade's Merchant Graph using the merchant name, MCC, location, and acquirer ID on the card transaction</td><td>Extracted from the description string, the one field its merchant endpoint takes; without a database match, you get a cleaned piece of the string</td></tr>
+        <tr><th>How the merchant is identified</th><td class="sp">Looked up in Spade's Merchant Graph, a verified record of 99.9% of US and Canadian businesses</td><td>Extracted from the description string, the one field its merchant endpoint takes; without a database match, you get a cleaned piece of the string</td></tr>
         <tr><th>Coverage</th><td class="sp">99.9% of US and Canadian businesses, published</td><td>No published coverage figure</td></tr>
         <tr><th>Accuracy</th><td class="sp">&gt;99%, published</td><td>No published accuracy figure; a confidence score on each category</td></tr>
         <tr><th>Real time</th><td class="sp">&lt;40ms p99, inside the authorization window</td><td>200 to 500ms for its auth-flow merchant endpoint, per its docs</td></tr>
@@ -691,7 +691,7 @@ body.clean .review{display:none}
   <div class="c">
     <div><p class="eb">[FAQ]</p><h2 class="h2">Questions teams ask before they switch</h2></div>
     <div>
-      <details open><summary>How is Spade different from Heron?</summary><p>Heron extracts the merchant from the transaction description and returns it when it finds a match in its database; its docs put the auth-flow response at 200 to 500ms. Spade looks every card transaction up in its Merchant Graph, a verified record of 99.9% of US and Canadian businesses, using the merchant name, MCC, location, and acquirer ID: over 99% accurate, in under 40ms p99.</p></details>
+      <details open><summary>How is Spade different from Heron?</summary><p>Heron extracts the merchant from the transaction description and returns it when it finds a match in its database; its docs put the auth-flow response at 200 to 500ms. Spade looks every card transaction up in its Merchant Graph, a verified record of 99.9% of US and Canadian businesses: over 99% accurate, in under 40ms p99.</p></details>
       <details><summary>Can we test Spade against our Heron output?</summary><p>Yes. Send a sample of your recent transactions and we'll return it enriched, so you can compare the results with your current provider's.</p></details>
       <details><summary>Can Spade run our spend controls at authorization?</summary><p>Yes. Keep matching against the merchant lists you run today, or register the merchants, brands, or granular categories you want to allow or block and get the decision back with the verified merchant, in under 40ms p99.</p></details>
       <details><summary>How hard is it to switch?</summary><p>Unit had its enrichment live in less than two weeks. You can start with a sample of your past transactions, before anything touches your live flow.</p></details>
