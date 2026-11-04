@@ -14,8 +14,11 @@ Open: https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-l
 
 Design preview of the Google Ads transaction enrichment landing page, for the design team. Earlier versions: https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v4/ https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v5/, and https://spade-data-inc-labs.github.io/ads-preview/transaction-enrichment-lp-v6/. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
 
-## Spade vs Ntropy landing page
+## Competitor landing pages
 
-Open: https://spade-data-inc-labs.github.io/ads-preview/ntropy-lp/
+Index: https://spade-data-inc-labs.github.io/ads-preview/competitors/
 
-Design preview of the Google Ads landing page for Ntropy competitor keywords, for the ad agency. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
+- Spade vs Ntropy: https://spade-data-inc-labs.github.io/ads-preview/competitors/ntropy/ (the old /ntropy-lp/ link redirects here)
+- Spade vs Heron: https://spade-data-inc-labs.github.io/ads-preview/competitors/heron/
+
+Design previews of the Google Ads competitor-keyword pages, for the ad agency. One folder per competitor under `competitors/`. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
