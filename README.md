@@ -19,6 +19,5 @@ Design preview of the Google Ads transaction enrichment landing page, for the de
 Index: https://spade-data-inc-labs.github.io/ads-preview/competitors/
 
 - Spade vs Ntropy: https://spade-data-inc-labs.github.io/ads-preview/competitors/ntropy/ (the old /ntropy-lp/ link redirects here)
-- Spade vs Heron: https://spade-data-inc-labs.github.io/ads-preview/competitors/heron/
 
 Design previews of the Google Ads competitor-keyword pages, for the ad agency. One folder per competitor under `competitors/`. The forms are mockups and submit nothing. Same temporary, noindex terms as above.
