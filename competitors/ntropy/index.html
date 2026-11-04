@@ -548,7 +548,7 @@ body.clean .review{display:none}
 <section class="lookup" id="lookup">
   <div class="c">
     <p class="eb">[The Merchant Graph]</p>
-    <h2 class="h2">A model guesses the merchant. Spade looks it up.</h2>
+    <h2 class="h2">A model guesses the merchant.<br>Spade looks it up.</h2>
     <p class="lead">Ntropy infers the merchant from the descriptor with a language model. Spade looks every transaction up in the Merchant Graph, its verified record of 99.9% of US and Canadian businesses and how they relate.</p>
             <div class="lk3">
       <div class="lk"><span class="sn">01</span><b>More accurate</b><p>The descriptor doesn&#39;t carry the verified merchant, so a model can only infer it. Spade matches it to a verified business: over 99% accurate in your app, rewards, and AI.</p></div>
@@ -705,7 +705,7 @@ body.clean .review{display:none}
         <tr><th>When the descriptor doesn't name the merchant</th><td class="sp">Found by lookup in the Merchant Graph</td><td>Limited to what can be inferred from the string</td></tr>
         <tr><th>Accuracy</th><td class="sp">&gt;99%, published</td><td>No published accuracy figure</td></tr>
         <tr><th>Real time</th><td class="sp">&lt;40ms p99, inside the authorization window</td><td>No published latency commitment</td></tr>
-        <tr><th>Rewards and spend controls</th><td class="sp">Register merchants once; your reward or control decision comes back in the same response, inside the authorization window</td><td>You build the rules against its output</td></tr>
+        <tr><th>Rewards and spend controls</th><td class="sp">Register merchants once; your reward or control decision comes back in the same response, inside the authorization window</td><td>You keep your own merchant list, match it to each response, and keep it current as merchant IDs (MIDs) rotate</td></tr>
         <tr><th>What you send</th><td class="sp">Transaction fields; no PII needed</td><td>An account-holder ID, which its docs require for categorization</td></tr>
       </tbody>
     </table>
