@@ -703,7 +703,7 @@ body.clean .review{display:none}
       <details open><summary>How is Spade different from Ntropy?</summary><p>Ntropy uses a language model to infer the merchant from the descriptor, with an entity database. Spade looks every transaction up in its Merchant Graph, a verified record of 99.9% of US and Canadian businesses: over 99% accurate, in under 40ms p99, fast enough to use at authorization for rewards, spend controls, and approvals.</p></details>
       <details><summary>Can we test Spade against our Ntropy output?</summary><p>Yes. Send a sample of your recent transactions and we'll return it enriched, so you can compare the results with your current provider's.</p></details>
       <details><summary>Should we compare fill rate or accuracy?</summary><p>Both, with accuracy first. A wrong merchant in your app or your rewards costs more than a blank one, so check each returned merchant against what the transaction actually was.</p></details>
-      <details><summary>How hard is it to switch?</summary><p>Unit had its enrichment live in less than two weeks. You can start with a batch of your history, compare it, and then integrate the real-time API.</p></details>
+      <details><summary>How hard is it to switch?</summary><p>Unit had its enrichment live in less than two weeks. You can start with a sample of your past transactions, before anything touches your live flow.</p></details>
       <details><summary>How does pricing work?</summary><p>Per transaction, sized to your volume. We'll cover it on the first call.</p></details>
       <details><summary>What data do you need? Is any of it PII?</summary><p>No PII, by design. Spade needs only the transaction fields: no customer names, account numbers, or card numbers.</p></details>
     </div>
