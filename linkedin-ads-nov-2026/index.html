@@ -419,12 +419,14 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
         <p class="intro">Every swipe, payment, and transfer is a first-party record of how your customers spend. Spade makes it readable, so you can act on it.</p></div>
       <div class="cr ink">
         <p class="h">Your most valuable asset is <span class="lime">the data you can't read.</span></p>
-        <div class="resin"><div>PMUSA 303010 PHILADELP</div></div>
+        <pre class="json" style="flex:1;margin:auto 0;max-height:none">{
+  <span class="hl">"merchantName": "PMUSA 303010 PHILADELP"</span>
+}</pre>
         <p class="sub dim">Spade puts the verified merchant on every transaction, so customers recognize their charges and you can build offers, products, and AI on your own data.</p>
       </div>
       <div class="linkbar"><b>Unlock the value in your transaction data<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
       <div class="notes">
-        <div><h3>What this is</h3><p>The Money20/20 resin block: a real descriptor suspended in a clear block, the trapped asset as an object. One real string inside it: <code>PMUSA 303010 PHILADELP</code>, which is ParkMobile, though nothing in the string says so. No resolved name on the image; the headline carries the point.</p></div>
+        <div><h3>What this is</h3><p>The raw string as it arrives in a transaction payload, set as code. <code>PMUSA 303010 PHILADELP</code> is ParkMobile, though nothing in the string says so. No resolved name on the image; the headline carries the point. <code>merchantName</code> is the field name in Spade's own request schema.</p></div>
       </div>
     </article>
 
