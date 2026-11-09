@@ -344,6 +344,10 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
 .tree .kids4 .node { text-align: center; font-size: 4.2cqw; padding: 2.6cqw 2cqw; }
 .tree .kids4 small { display: block; font-size: 3cqw; font-weight: 600; color: #4C5C43; margin-top: .6cqw; }
 
+.gatebox { margin-top: 18px; background: var(--flag-bg); border: 1px solid var(--flag-line); color: var(--text); border-radius: var(--r); padding: 14px 18px; font-size: 15px; max-width: 80ch; }
+.gatebox b { color: var(--flag); }
+.map-item.gate { background: var(--flag-bg); border-color: var(--flag-line); }
+
 .notes { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--line-soft); }
 .notes h3 { margin: 0 0 3px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .notes p { margin: 0; font-size: 13.5px; color: var(--text-2); }
@@ -364,7 +368,7 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
   <section class="map" aria-label="Campaigns">
     <div class="map-item"><h2>Banks</h2><p class="ads">K1, K2, K3, K4, S2, S3, S5</p><p class="ads">S1, S7, P1, P3, P4</p><p class="ads">M1, M2, M10, M11</p></div>
     <div class="map-item"><h2>Fintechs</h2><p class="ads">K1, K2, K4, S1, S3, S4, S6</p><p class="ads">S2, P1, P2, P3, P4</p><p class="ads">M1, M2, M4, M6, M10, M13</p></div>
-    <div class="map-item"><h2>Business banking</h2><p class="ads">S8, M9, C1</p></div>
+    <div class="map-item gate"><h2>Business banking</h2><p class="ads">S8, M9, C1</p><p>Not ready: needs approval and an audience-size check.</p></div>
     <div class="map-item"><h2>Use cases</h2><p class="ads">Fintechs: RC1, RC2, RC3, AI1</p><p class="ads">Banks: RC3, AI1</p></div>
     <div class="map-item"><h2>Fraud and risk</h2><p class="ads">F1, F2, F3, F4, M8, M12</p><p>Once a fraud audience is built.</p></div>
     <div class="map-item"><h2>Refresh</h2><p class="ads">R1, R4</p><p class="ads">R3: Money20/20 attendees</p></div>
@@ -444,7 +448,7 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
   </section>
 
   <section class="section">
-    <div class="section-head"><h2>Solution aware: why Spade</h2><span class="count">8 ads</span></div>
+    <div class="section-head"><h2>Solution aware: why Spade</h2><span class="count">7 ads</span></div>
     <div class="grid">
 
     <!-- S1 -->
@@ -562,23 +566,6 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
       <div class="notes"><div><h3>Brief</h3><p>Masked customer IDs only. Illustrative pairings, not real customers.</p></div></div>
     </article>
 
-    <!-- S8 -->
-    <article class="ad">
-      <div class="ad-top"><span class="ref">S8</span><span class="chip aud">Business banking</span><span class="chip">Loaded question</span><span class="chip pend">Pending Spade sign-off</span></div>
-      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
-        <p class="intro">Business customers still pay many suppliers by check. Spade matches each payment to the verified business and shows which accept card, so you can offer a better way to pay.</p></div>
-      <div class="cr deep">
-        <p class="h">Which of the businesses your customers pay by check <span class="lime">already take card?</span></p>
-        <div class="form">
-          <div class="formhead">Check payments</div>
-          <div class="row"><span class="box">✓</span><span class="kind">Office supplies</span><span class="tag">Takes card</span></div>
-          <div class="row"><span class="box">✓</span><span class="kind">Freight</span><span class="tag">Takes card</span></div>
-          <div class="row"><span class="box no">✕</span><span class="kind">Rent</span><span class="tag no">Check only</span></div>
-        </div>
-        <p class="sub dim">Spade shows which payees accept card.</p>
-      </div>
-      <div class="linkbar"><b>See which check payees already accept card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
-    </article>
 
     </div>
   </section>
@@ -730,14 +717,14 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
   </section>
 
   <section class="section">
-    <div class="section-head"><h2>Most aware: the ask</h2><span class="count">9 ads</span></div>
+    <div class="section-head"><h2>Most aware: the ask</h2><span class="count">8 ads</span></div>
   <div class="grid">
 
     <!-- 1 -->
     <article class="ad">
       <div class="ad-top"><span class="ref">M1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
       <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
-        <p class="intro">See exactly what changes before you commit. Send two to four weeks of real transactions, and Spade sends back the verified merchant on each one it matches, with your match rate.</p></div>
+        <p class="intro">Send two to four weeks of real transactions. Spade sends back the verified merchant on each one it matches, plus your match rate, so you can see the difference on your own data.</p></div>
       <div class="cr ink">
         <p class="h">See the verified merchant behind <span class="lime">every charge your customers can't read.</span></p>
         <div class="audit-doc">
@@ -791,7 +778,6 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
         <div class="stack">
           <div class="notif"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
           <div class="notif ghost"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
-          <div class="notif ghost2"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
         </div>
         <div class="push">
           <p class="h">Stop updating your merchant list <span class="lime">every month.</span></p>
@@ -799,43 +785,30 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
         </div>
       </div>
       <div class="linkbar"><b>Test your merchant list on a month of transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
-      <div class="notes"><div><h3>Brief</h3><p>The same review request stacked three times, fading back: one per month.</p></div></div>
+      <div class="notes"><div><h3>Brief</h3><p>The same review request stacked twice, the second fading back: one per month.</p></div></div>
     </article>
 
 
     <!-- 8 -->
     <article class="ad">
-      <div class="ad-top"><span class="ref">M8</span><span class="chip aud">Fraud and risk</span><span class="chip">Timeline</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="ad-top"><span class="ref">M8</span><span class="chip aud">Fraud and risk</span><span class="chip">Plain statement</span></div>
       <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
-        <p class="intro">Spade's foundation model, fine-tuned for fraud rings, flags the merchants running fraud. See which ones it flags in your own transactions.</p></div>
+        <p class="intro">Spade's fraud model flags merchants behaving the way fraudulent businesses do. It adds to the customer-level tools you already run.</p></div>
       <div class="cr ink">
-        <p class="h">One fraudulent merchant, flagged <span class="lime">five months before the issuer blocked it.</span></p>
-        <div class="tl">
-          <div class="track"><div class="span"></div><span class="pin a"></span><span class="pin b"></span><span class="lab a">Flagged</span><span class="lab b">First block</span></div>
-          <div class="gap">5 months</div>
+        <p class="h">Your fraud tools watch the customer. <span class="lime">Spade flags the merchant.</span></p>
+        <div class="model">
+          <div class="ins"><div class="in">Customer-level signals<br><small style="color:var(--mute-on-dark);font-weight:600">Your tools</small></div><div class="in" style="background:var(--lime);color:var(--ink);border-color:var(--lime)">Merchant-level signals<br><small style="font-weight:700">Spade</small></div></div>
+          <div class="down">↓</div>
+          <div class="out" style="background:var(--paper)">Your risk decisions</div>
         </div>
-        <p class="sub dim">Across eight months: up to $3 million in fraudulent spend the issuer could have blocked.</p>
       </div>
-      <div class="linkbar"><b>See which merchants in your data are running fraud<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
-      <div class="notes"><div><h3>Brief</h3><p>A simple timeline: "Flagged" at the left end, "First block" at the right, "5 months" between.</p></div></div>
+      <div class="linkbar"><b>Add merchant-level signals to your fraud stack<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>Brief</h3><p>Two inputs into one decision. The Spade box is the highlight; the customer-level box stays muted.</p></div>
+      </div>
     </article>
 
 
-    <!-- M9 -->
-    <article class="ad">
-      <div class="ad-top"><span class="ref">M9</span><span class="chip aud">Business banking</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
-      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
-        <p class="intro">Send a batch file of your business banking transfers, with no PII. Spade runs it and shows which payees accept card, so you can offer your customers a better way to pay.</p></div>
-      <div class="cr ink">
-        <p class="h">Send us your business transfers. <span class="lime">See which payees take card.</span></p>
-        <div class="audit-doc">
-          <div class="label">You get back</div>
-          <ul><li>Share of transfers that pay a business</li><li>Which of those businesses accept card</li><li>Top payees by frequency and volume</li></ul>
-          <div class="seal" style="margin-top:auto">No PII.</div>
-        </div>
-      </div>
-      <div class="linkbar"><b>Find the check volume you could move to card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
-    </article>
 
     <!-- M10 -->
     <article class="ad">
@@ -884,6 +857,51 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
     </article>
 
   </div>
+  </section>
+
+
+  <section class="section">
+    <div class="section-head"><h2>Business banking: checks to card</h2><span class="count">2 ads and a message ad</span></div>
+    <div class="gatebox"><b>Not ready to launch.</b> For the business banking segment only (Small Business Banking titles at banks, and fintechs with business banking). Before these run: 1. Spade approves the offer and its turnaround. 2. Check the audience size for business banking titles on both ABM lists.</div>
+    <div class="grid">
+    <!-- S8 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S8</span><span class="chip aud">Business banking</span><span class="chip">Loaded question</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Business customers still pay many suppliers by check. Spade matches each payment to the verified business and shows which accept card, so you can offer a better way to pay.</p></div>
+      <div class="cr deep">
+        <p class="h">Which of the businesses your customers pay by check <span class="lime">already take card?</span></p>
+        <div class="form">
+          <div class="formhead">Check payments</div>
+          <div class="row"><span class="box">✓</span><span class="kind">Office supplies</span><span class="tag">Takes card</span></div>
+          <div class="row"><span class="box">✓</span><span class="kind">Freight</span><span class="tag">Takes card</span></div>
+          <div class="row"><span class="box no">✕</span><span class="kind">Rent</span><span class="tag no">Check only</span></div>
+        </div>
+        <p class="sub dim">Spade shows which payees accept card.</p>
+      </div>
+      <div class="linkbar"><b>See which check payees already accept card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+    </article>
+    <!-- M9 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M9</span><span class="chip aud">Business banking</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Send a batch file of your business banking transfers, with no PII. Spade runs it and shows which payees accept card, so you can offer your customers a better way to pay.</p></div>
+      <div class="cr ink">
+        <p class="h">Send us your business transfers. <span class="lime">See which payees take card.</span></p>
+        <div class="audit-doc">
+          <div class="label">You get back</div>
+          <ul><li>Share of transfers that pay a business</li><li>Which of those businesses accept card</li><li>Top payees by frequency and volume</li></ul>
+          <div class="seal" style="margin-top:auto">No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Find the check volume you could move to card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+    </article>
+    <article class="convo">
+      <div class="subj">From <b>Monica Murthy</b> · Subject: <b>Which of your check payees take card?</b></div>
+      <p class="msg">Hi %FIRSTNAME%, at Money20/20, eight institutions asked me the same thing: which of the businesses their customers pay by check already accept card? Send us a batch file of your business transfers (no PII) and we'll show you which payees take card, and who your customers pay most.</p>
+      <div class="btns"><span>Run it on my data</span><span>Not right now</span></div>
+    </article>
+    </div>
   </section>
 
   <section class="section">
@@ -1035,18 +1053,6 @@ h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-s
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head"><h2>Message ad</h2><span class="count">1 message</span></div>
-    <div class="grid" style="grid-template-columns:1fr">
-
-    <article class="convo">
-      <div class="subj">From <b>Monica Murthy</b> · Subject: <b>Which of your check payees take card?</b></div>
-      <p class="msg">Hi %FIRSTNAME%, at Money20/20, eight institutions asked me the same thing: which of the businesses their customers pay by check already accept card? Send us a batch file of your business transfers (no PII) and we'll show you which payees take card, and who your customers pay most.</p>
-      <div class="btns"><span>Run it on my data</span><span>Not right now</span></div>
-    </article>
-
-    </div>
-  </section>
 </div>
 </body>
 </html>
