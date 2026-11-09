@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spade LinkedIn Ads</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+/* Layout: masthead, a campaign map, then one grid of ad cards; each card is post text, a 4:5 creative, the link bar, and production notes. */
+:root {
+  --ground: #F6F9F2; --surface: #FFFFFF; --surface-2: #EDF4E2;
+  --text: #16200F; --text-2: #4C5C43; --muted: #6E7F64;
+  --line: #D7E2CB; --line-soft: #E6EEDB;
+  --accent: #3F7308; --accent-text: #2F5606;
+  --flag: #7A5200; --flag-bg: #FBF1D8; --flag-line: #E8D3A0;
+  /* creative palette: brand colors, identical in both themes because the ad itself does not change */
+  --ink: #090F05; --deep: #093328; --olive: #3F7308; --lime: #B2EB76; --soft: #D8E5CA; --card: #EAF4DB; --paper: #FFFFFF; --cream-ink: #F2F8EA; --mute-on-dark: #8FAE95;
+  --sans: "Helvetica Neue", Helvetica, "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #0A1008; --surface: #111A0E; --surface-2: #16220F; --text: #E4EEDA; --text-2: #B4C4A9; --muted: #8B9C81;
+  --line: #26311F; --line-soft: #1C2616; --accent: #B2EB76; --accent-text: #C3F08F;
+  --flag: #E4C482; --flag-bg: #241D0E; --flag-line: #46381A; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --ground: #0A1008; --surface: #111A0E; --surface-2: #16220F; --text: #E4EEDA; --text-2: #B4C4A9; --muted: #8B9C81;
+  --line: #26311F; --line-soft: #1C2616; --accent: #B2EB76; --accent-text: #C3F08F;
+  --flag: #E4C482; --flag-bg: #241D0E; --flag-line: #46381A; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 48px 96px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.masthead { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+h1 { margin: 0; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.06; letter-spacing: -.022em; font-weight: 700; text-wrap: balance; max-width: 22ch; }
+.standfirst { margin: 0; max-width: 68ch; color: var(--text-2); font-size: 17px; }
+
+.map { margin-top: 32px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.map-item { background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: var(--r); padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.map-item h2 { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.map-item p { margin: 0; font-size: 14px; color: var(--text-2); }
+.map-item .ads { font-family: var(--mono); font-size: 13px; color: var(--accent-text); font-weight: 600; }
+
+.grid { margin-top: 40px; display: grid; gap: 26px; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+.ad { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.ad-top { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
+.ref { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent-text); }
+.chip { font-size: 11px; letter-spacing: .045em; text-transform: uppercase; font-weight: 600; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.chip.aud { border-color: var(--accent-text); color: var(--accent-text); font-weight: 700; }
+
+.post { padding: 14px 16px 12px; }
+.byline { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+.avatar { width: 30px; height: 30px; border-radius: 5px; background: var(--deep); color: var(--lime); display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.byline b { display: block; font-size: 13.5px; line-height: 1.2; }
+.byline span { font-size: 12px; color: var(--muted); }
+.intro { margin: 0; font-size: 14px; color: var(--text); }
+
+/* ---- the creative, 4:5 ---- */
+.cr { position: relative; aspect-ratio: 4 / 5; width: 100%; max-width: 100%; overflow: hidden; container-type: inline-size; display: flex; flex-direction: column; padding: 7cqw 7cqw 6cqw; gap: 4cqw; font-family: var(--sans); }
+.cr.ink { background: var(--ink); color: var(--cream-ink); }
+.cr.deep { background: var(--deep); color: var(--cream-ink); }
+.cr.cardfill { background: var(--card); color: var(--ink); }
+.cr.softfill { background: var(--soft); color: var(--ink); }
+.h { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: 1.04; font-size: 7.6cqw; text-wrap: balance; }
+.h .lime { color: var(--lime); }
+.sub { margin: 0; font-size: 4cqw; line-height: 1.3; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--mute-on-dark); }
+
+/* 1 audit */
+.audit-doc { flex: 1; border: 1px solid rgba(178,235,118,.35); border-radius: 2.4cqw; padding: 5cqw; display: flex; flex-direction: column; gap: 3.2cqw; }
+.audit-doc .label { font-size: 2.9cqw; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); font-weight: 700; }
+.audit-doc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3cqw; }
+.audit-doc li { font-size: 4.6cqw; font-weight: 600; display: flex; gap: 2.4cqw; }
+.audit-doc li::before { content: "▸"; color: var(--lime); }
+.seal { align-self: flex-end; background: var(--lime); color: var(--ink); font-weight: 800; font-size: 3.6cqw; padding: 2.4cqw 3.6cqw; border-radius: 999px; transform: rotate(-4deg); }
+
+/* 2 before / after */
+.ba { flex: 1; display: grid; grid-template-rows: 1fr 1fr; gap: 3cqw; }
+.ba > div { border-radius: 2.4cqw; padding: 4.4cqw; display: flex; flex-direction: column; justify-content: center; gap: 1.6cqw; }
+.ba .before { background: rgba(255,255,255,.06); border: 1px dashed var(--mute-on-dark); }
+.ba .after { background: var(--card); color: var(--ink); }
+.ba .tag { font-size: 2.8cqw; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; }
+.ba .before .tag { color: var(--mute-on-dark); }
+.ba .after .tag { color: var(--olive); }
+.ba .desc { font-family: var(--mono); font-size: 5.6cqw; font-weight: 600; color: var(--cream-ink); word-break: break-all; }
+.ba .code { font-family: var(--mono); font-size: 3.5cqw; color: var(--mute-on-dark); }
+.ba .merchant { display: flex; align-items: center; gap: 3cqw; }
+.ba .logo { width: 10cqw; height: 10cqw; border-radius: 2cqw; background: var(--deep); color: var(--lime); display: grid; place-items: center; font-weight: 800; font-size: 4cqw; flex: none; }
+.ba .name { font-size: 6cqw; font-weight: 800; line-height: 1.1; }
+.ba .meta { font-size: 3.6cqw; color: var(--olive); font-weight: 600; }
+
+/* 3 calendar invite */
+.invite { flex: 1; background: var(--paper); border-radius: 2.6cqw; box-shadow: 0 1.6cqw 5cqw rgba(9,15,5,.14); padding: 5cqw; display: flex; flex-direction: column; gap: 3.4cqw; }
+.invite .bar { display: flex; align-items: center; gap: 2.4cqw; }
+.invite .sq { width: 3.6cqw; height: 3.6cqw; border-radius: .8cqw; background: var(--olive); flex: none; }
+.invite .title { font-size: 5.6cqw; font-weight: 800; line-height: 1.1; }
+.invite .when { font-size: 3.6cqw; color: #4C5C43; padding-left: 6cqw; }
+.invite .rule { height: 1px; background: #E6EEDB; }
+.invite ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2.8cqw; }
+.invite li { font-size: 4.3cqw; font-weight: 600; display: flex; gap: 2.4cqw; }
+.invite li span { color: var(--olive); font-weight: 800; }
+.invite .rsvp { margin-top: auto; display: flex; gap: 2cqw; }
+.invite .rsvp span { font-size: 3.4cqw; font-weight: 700; padding: 1.6cqw 3.6cqw; border-radius: 999px; border: 1px solid #D7E2CB; color: #4C5C43; }
+.invite .rsvp span.yes { background: var(--deep); border-color: var(--deep); color: var(--lime); }
+
+/* 4 three steps */
+.steps { flex: 1; display: flex; flex-direction: column; gap: 3cqw; }
+.step { background: var(--paper); border-radius: 2.4cqw; padding: 4cqw 4.4cqw; display: flex; gap: 3.6cqw; align-items: flex-start; }
+.step .num { width: 8cqw; height: 8cqw; border-radius: 50%; background: var(--deep); color: var(--lime); display: grid; place-items: center; font-weight: 800; font-size: 4cqw; flex: none; }
+.step p { margin: 0; font-size: 4.4cqw; font-weight: 700; line-height: 1.25; }
+.step .pair { margin-top: 1.6cqw; display: flex; flex-wrap: wrap; align-items: center; gap: 2cqw; font-size: 3.6cqw; }
+.step .pair .in { font-family: var(--mono); color: #6E7F64; }
+.step .pair .out { background: var(--lime); color: var(--ink); font-weight: 800; padding: .8cqw 2.4cqw; border-radius: 999px; }
+.proof { font-size: 4cqw; font-weight: 700; color: var(--olive); }
+
+/* 5 checklist */
+.form { flex: 1; background: var(--paper); color: var(--ink); border-radius: 2.4cqw; padding: 5cqw; display: flex; flex-direction: column; gap: 3cqw; }
+.form .formhead { font-size: 2.9cqw; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: #6E7F64; padding-bottom: 2cqw; border-bottom: 1px solid #E6EEDB; }
+.form .row { display: flex; align-items: center; gap: 3.4cqw; font-size: 4.7cqw; font-weight: 700; }
+.form .box { width: 6.4cqw; height: 6.4cqw; border-radius: 1.2cqw; background: var(--olive); color: var(--paper); display: grid; place-items: center; font-size: 4cqw; font-weight: 800; flex: none; }
+
+/* 6 notification */
+.notif { background: #1A2416; border: 1px solid rgba(178,235,118,.25); border-radius: 2.6cqw; padding: 4.4cqw; display: flex; gap: 3.4cqw; align-items: flex-start; }
+.notif .dot { width: 9cqw; height: 9cqw; border-radius: 50%; background: var(--olive); display: grid; place-items: center; color: var(--lime); font-weight: 800; font-size: 4.4cqw; flex: none; }
+.notif .k { font-size: 3.2cqw; color: var(--mute-on-dark); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.notif .t { font-size: 4.8cqw; font-weight: 700; line-height: 1.2; margin-top: .8cqw; }
+.notif.ghost { opacity: .45; transform: scale(.94); margin-top: -2cqw; }
+.notif.ghost2 { opacity: .22; transform: scale(.88); margin-top: -2.6cqw; }
+.stack { display: flex; flex-direction: column; }
+.push { margin-top: auto; display: flex; flex-direction: column; gap: 3cqw; }
+
+/* 7 one number */
+.big { font-size: 38cqw; line-height: .9; font-weight: 800; letter-spacing: -.05em; color: var(--lime); margin: auto 0 0; }
+.bigsub { font-size: 4.6cqw; line-height: 1.32; margin: 0; max-width: 30ch; }
+.offer { font-size: 4.6cqw; font-weight: 800; color: var(--lime); margin: 0; }
+
+/* 8 timeline */
+.tl { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4cqw; }
+.tl .track { position: relative; height: 1.4cqw; background: rgba(255,255,255,.12); border-radius: 999px; margin: 12cqw 3cqw 0; }
+.tl .span { position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--lime), rgba(178,235,118,.25)); border-radius: 999px; }
+.tl .pin { position: absolute; top: 50%; width: 5.6cqw; height: 5.6cqw; border-radius: 50%; transform: translate(-50%, -50%); }
+.tl .pin.a { left: 0; background: var(--lime); }
+.tl .pin.b { left: 100%; background: var(--cream-ink); }
+.tl .lab { position: absolute; bottom: 4.4cqw; font-size: 3.6cqw; font-weight: 700; white-space: nowrap; }
+.tl .lab.a { left: 0; transform: translateX(-12%); color: var(--lime); }
+.tl .lab.b { right: 0; transform: translateX(12%); }
+.tl .gap { text-align: center; font-size: 9cqw; font-weight: 800; letter-spacing: -.02em; color: var(--lime); }
+
+/* link bar */
+.linkbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--surface-2); border-top: 1px solid var(--line-soft); }
+.linkbar b { font-size: 14px; line-height: 1.3; min-width: 0; }
+.linkbar .url { display: block; font-size: 12px; color: var(--muted); font-weight: 400; }
+.cta { flex: none; font-size: 13px; font-weight: 700; color: var(--accent-text); border: 1.5px solid var(--accent-text); border-radius: 999px; padding: 5px 13px; }
+
+/* stage sections */
+.section { margin-top: 56px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding-bottom: 10px; border-bottom: 2px solid var(--text); }
+.section-head h2 { margin: 0; font-size: 23px; letter-spacing: -.015em; font-weight: 700; }
+.section-head .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.throughline { margin: 14px 0 0; max-width: 74ch; font-size: 15.5px; color: var(--text-2); }
+.section .grid { margin-top: 26px; }
+
+/* S1 artifact */
+.artifact { font-family: var(--mono); font-weight: 700; font-size: 8.4cqw; line-height: 1.1; color: var(--lime); word-break: break-all; margin: auto 0 0; }
+.cr.paper { background: var(--paper); color: var(--ink); }
+/* S2 code chip */
+.codechip { align-self: flex-start; font-family: var(--mono); font-size: 6cqw; font-weight: 700; background: rgba(178,235,118,.12); border: 1px solid rgba(178,235,118,.45); color: var(--lime); padding: 2.4cqw 4cqw; border-radius: 2cqw; margin: auto 0; }
+.punch { margin: 0; font-size: 5cqw; font-weight: 800; color: var(--lime); line-height: 1.15; }
+/* S3 tree */
+.tree { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+.tree .node { background: var(--paper); border-radius: 2cqw; padding: 2.6cqw 4cqw; font-weight: 800; font-size: 4.6cqw; box-shadow: 0 1cqw 3cqw rgba(9,15,5,.1); }
+.tree .node.parent { background: var(--deep); color: var(--lime); }
+.tree .stem { width: 2px; height: 6cqw; background: var(--olive); }
+.tree .kids { display: flex; gap: 4cqw; position: relative; padding-top: 6cqw; }
+.tree .kids::before { content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 2px; background: var(--olive); }
+.tree .kid { display: flex; flex-direction: column; align-items: center; position: relative; }
+.tree .kid::before { content: ""; position: absolute; top: -6cqw; width: 2px; height: 6cqw; background: var(--olive); }
+/* S4 json */
+.json { flex: 1; margin: 0; background: #111A0E; border: 1px solid rgba(178,235,118,.25); border-radius: 2.4cqw; padding: 5cqw; font-family: var(--mono); font-size: 4.3cqw; line-height: 1.7; color: var(--mute-on-dark); display: flex; flex-direction: column; justify-content: center; white-space: pre; overflow: hidden; }
+.json .hl { color: var(--lime); font-weight: 700; }
+/* S5 quote and rails */
+.quote { margin: 0; font-size: 6.6cqw; font-weight: 800; line-height: 1.12; letter-spacing: -.015em; text-wrap: balance; }
+.attr { font-size: 3.6cqw; color: var(--mute-on-dark); font-weight: 600; }
+.rails { flex: 1; display: flex; align-items: center; gap: 3cqw; }
+.rails .col { display: flex; flex-direction: column; gap: 2.4cqw; }
+.rails .rail { font-family: var(--mono); font-size: 4cqw; font-weight: 700; border: 1px solid var(--mute-on-dark); border-radius: 1.6cqw; padding: 1.8cqw 3.4cqw; text-align: center; }
+.rails .arrow { font-size: 6cqw; color: var(--lime); }
+.rails .one { background: var(--lime); color: var(--ink); font-weight: 800; font-size: 4.2cqw; border-radius: 2cqw; padding: 3cqw 4cqw; line-height: 1.15; }
+/* S6 review */
+.review { flex: 1; background: var(--paper); border-radius: 2.6cqw; padding: 6cqw; display: flex; flex-direction: column; justify-content: center; gap: 4cqw; box-shadow: 0 1.6cqw 5cqw rgba(9,15,5,.12); }
+.stars { color: #E8A317; font-size: 7cqw; letter-spacing: 1cqw; }
+.review .quote { font-size: 6cqw; }
+.review .who { font-size: 3.8cqw; font-weight: 700; }
+.review .src { font-size: 3.4cqw; color: #6E7F64; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; }
+/* S7 compare */
+.compare { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; align-content: center; }
+.compare div { padding: 3.2cqw 3.6cqw; border-radius: 1.6cqw; font-size: 4cqw; font-weight: 600; line-height: 1.25; }
+.compare .th { font-size: 3cqw; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; padding-bottom: 1cqw; }
+.compare .th.them { color: #6E7F64; }
+.compare .th.us { color: var(--olive); }
+.compare .them { background: var(--paper); color: #6E7F64; }
+.compare .us { background: var(--deep); color: var(--lime); font-weight: 800; }
+.compare .th.them, .compare .th.us { background: none; }
+/* S8 latency */
+.lat { margin: auto 0 0; display: flex; align-items: baseline; gap: 3cqw; }
+.lat b { font-size: 26cqw; line-height: .9; font-weight: 800; letter-spacing: -.04em; color: var(--lime); }
+.lat span { font-family: var(--mono); font-size: 6cqw; font-weight: 700; color: var(--mute-on-dark); }
+/* S9 model */
+.model { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2.6cqw; }
+.model .ins { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; }
+.model .in { border: 1px solid var(--mute-on-dark); border-radius: 2cqw; padding: 4cqw; font-size: 4.4cqw; font-weight: 700; line-height: 1.2; }
+.model .down { text-align: center; font-size: 6cqw; color: var(--lime); line-height: 1; }
+.model .out { background: var(--lime); color: var(--ink); border-radius: 2cqw; padding: 4.4cqw; font-size: 4.8cqw; font-weight: 800; line-height: 1.2; text-align: center; }
+
+/* K1 value prop */
+.triad { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2cqw; }
+.triad li { font-size: 4.6cqw; font-weight: 700; display: flex; gap: 2.4cqw; }
+.triad li::before { content: "▸"; color: var(--olive); }
+.cr.deep .triad li::before, .cr.ink .triad li::before { color: var(--lime); }
+.pairline { display: flex; flex-wrap: wrap; align-items: center; gap: 2.4cqw; font-size: 3.8cqw; margin-top: auto; }
+.pairline .in { font-family: var(--mono); color: var(--mute-on-dark); }
+.pairline .out { background: var(--lime); color: var(--ink); font-weight: 800; padding: 1cqw 2.8cqw; border-radius: 999px; }
+.proofline { font-family: var(--mono); font-size: 3.2cqw; color: var(--mute-on-dark); padding-top: 3cqw; border-top: 1px solid rgba(178,235,118,.25); }
+/* K2 record */
+.record { margin: auto 0; background: var(--paper); color: var(--ink); border-radius: 2.4cqw; overflow: hidden; }
+.record .inrow { font-family: var(--mono); font-size: 3.6cqw; color: #6E7F64; padding: 3cqw 4cqw; border-bottom: 1px dashed #D7E2CB; }
+.record .outrow { padding: 4cqw; display: flex; align-items: center; gap: 3cqw; }
+.record .outrow .logo { width: 10cqw; height: 10cqw; border-radius: 2cqw; background: var(--deep); color: var(--lime); display: grid; place-items: center; font-weight: 800; font-size: 4.4cqw; flex: none; }
+.record .outrow b { display: block; font-size: 6cqw; line-height: 1.1; }
+.record .outrow span { font-size: 3.8cqw; color: var(--olive); font-weight: 700; }
+/* K3 texture */
+.texture { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3cqw; font-family: var(--mono); font-weight: 700; font-size: 6.4cqw; color: rgba(178,235,118,.28); word-break: break-all; }
+.texture span:nth-child(2) { padding-left: 10cqw; }
+.texture span:nth-child(4) { padding-left: 6cqw; }
+/* K4 resin block */
+.resin { flex: 1; display: grid; place-items: center; }
+.resin div { width: 72%; aspect-ratio: 1.2 / 1; border-radius: 3cqw; background: linear-gradient(140deg, rgba(234,244,219,.22), rgba(178,235,118,.06) 55%, rgba(234,244,219,.16)); border: 1px solid rgba(234,244,219,.35); box-shadow: inset 0 0 6cqw rgba(178,235,118,.12), 0 3cqw 6cqw rgba(0,0,0,.35); display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 5.4cqw; color: var(--cream-ink); letter-spacing: .04em; }
+/* P1 stats */
+.stats { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4cqw; }
+.stat { display: flex; align-items: baseline; gap: 3.6cqw; border-top: 1px solid rgba(178,235,118,.25); padding-top: 3cqw; }
+.stat b { font-size: 15cqw; line-height: .9; font-weight: 800; letter-spacing: -.04em; color: var(--lime); min-width: 40cqw; }
+.stat span { font-size: 4.4cqw; font-weight: 700; line-height: 1.2; }
+/* P3 big coverage */
+.cover { font-size: 30cqw; line-height: .9; font-weight: 800; letter-spacing: -.05em; color: var(--deep); margin: auto 0 0; }
+/* P4 logo wall */
+.logos { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 2.4cqw; align-content: center; }
+.logos span { background: var(--paper); border-radius: 1.8cqw; padding: 4.4cqw 2cqw; text-align: center; font-weight: 800; font-size: 5cqw; letter-spacing: -.01em; color: var(--ink); }
+.eyeline { font-family: var(--mono); font-size: 3.6cqw; letter-spacing: .08em; color: var(--olive); }
+
+/* S7 ranked list */
+.ranklist { flex: 1; background: var(--paper); color: var(--ink); border-radius: 2.4cqw; padding: 4cqw 4.4cqw; display: flex; flex-direction: column; justify-content: center; gap: 2.6cqw; }
+.ranklist .rlhead { display: flex; justify-content: space-between; font-size: 2.9cqw; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: #6E7F64; }
+.ranklist .rl { display: grid; grid-template-columns: 5cqw 24cqw 1fr; align-items: center; gap: 3cqw; font-size: 4.2cqw; font-weight: 700; }
+.ranklist .id { font-family: var(--mono); color: #4C5C43; }
+.ranklist .bar { height: 3.2cqw; background: #E6EEDB; border-radius: 999px; overflow: hidden; }
+.ranklist .bar i { display: block; height: 100%; background: var(--olive); border-radius: 999px; }
+
+/* S8 check payees */
+.form .box.no { background: #D7E2CB; color: #6E7F64; }
+.form .row .kind { flex: 1; }
+.form .row .tag { font-size: 3.6cqw; font-weight: 700; color: var(--olive); }
+.form .row .tag.no { color: #6E7F64; }
+
+.model .ins.three { grid-template-columns: 1fr 1fr 1fr; }
+.model .ins.three .in { font-size: 3.8cqw; padding: 3.4cqw 2.6cqw; text-align: center; }
+.model .spendhead { font-size: 2.9cqw; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--mute-on-dark); }
+
+/* feed of raw strings */
+.feed { flex: 1; background: var(--paper); color: var(--ink); border-radius: 2.4cqw; padding: 2cqw 4.4cqw; display: flex; flex-direction: column; justify-content: center; }
+.feed .row { display: flex; align-items: center; gap: 3cqw; padding: 3cqw 0; border-bottom: 1px solid #E6EEDB; }
+.feed .row:last-child { border-bottom: 0; }
+.feed .dot { width: 8cqw; height: 8cqw; border-radius: 50%; background: #E6EEDB; flex: none; }
+.feed .str { font-family: var(--mono); font-size: 4cqw; font-weight: 700; flex: 1; word-break: break-all; }
+.feed .amt { font-size: 3.6cqw; color: #6E7F64; font-weight: 600; }
+/* flagged merchants */
+.flagrow .tag.flag { color: #B3261E; }
+.form .box.flag { background: #B3261E; }
+/* message ad */
+.convo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; display: flex; flex-direction: column; gap: 12px; max-width: 560px; }
+.convo .subj { font-size: 13px; color: var(--muted); }
+.convo .subj b { color: var(--text); }
+.convo .msg { margin: 0; font-size: 15px; }
+.convo .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.convo .btns span { font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--accent-text); color: var(--accent-text); }
+
+/* hand-drawn annotation */
+.scribble { display: flex; align-items: flex-start; gap: 2cqw; margin-top: 1cqw; padding-left: 16cqw; }
+.scribble svg { width: 18cqw; height: auto; flex: none; }
+.scribble span { font-family: "Caveat", "Bradley Hand", "Segoe Print", cursive; font-size: 7cqw; line-height: 1.05; color: var(--lime); font-weight: 700; transform: rotate(-3deg); margin-top: 5cqw; }
+
+/* S7 offers to customers */
+.offers { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3.4cqw; }
+.om { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 3cqw; }
+.om .offer { background: var(--lime); color: var(--ink); font-weight: 800; font-size: 4.4cqw; padding: 3.2cqw 3.6cqw; border-radius: 2cqw; text-align: center; }
+.om .ar { color: var(--lime); font-size: 6cqw; font-weight: 800; }
+.om .cust { background: var(--paper); color: var(--ink); font-family: var(--mono); font-weight: 700; font-size: 3.4cqw; white-space: nowrap; padding: 3.2cqw 3cqw; border-radius: 2cqw; text-align: center; }
+
+/* F4 flow */
+.flow { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6cqw; }
+.flowrow { display: flex; flex-wrap: wrap; align-items: center; gap: 2cqw; }
+.flowlab { width: 100%; font-size: 3cqw; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--mute-on-dark); }
+.flowlab.lime { color: var(--lime); }
+.flow .st { font-size: 3.8cqw; font-weight: 700; padding: 2.4cqw 3cqw; border-radius: 1.6cqw; border: 1px solid var(--mute-on-dark); color: var(--cream-ink); }
+.flow .st.go { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+.flow .ar { color: var(--mute-on-dark); font-weight: 800; }
+
+/* F3 three shapes */
+.shapes { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3cqw; }
+.shape { display: flex; align-items: center; gap: 3.6cqw; background: rgba(255,255,255,.06); border: 1px solid var(--mute-on-dark); border-radius: 2cqw; padding: 3.6cqw 4cqw; }
+.shape .n { width: 8cqw; height: 8cqw; border-radius: 50%; background: var(--lime); color: var(--ink); display: grid; place-items: center; font-weight: 800; font-size: 4cqw; flex: none; }
+.shape b { font-size: 4.8cqw; line-height: 1.2; }
+
+/* F3 alert */
+.alertcard { margin: auto 0; background: var(--paper); color: var(--ink); border-radius: 2.6cqw; padding: 5cqw; display: flex; flex-direction: column; gap: 2cqw; border-left: 2cqw solid #B3261E; }
+.alertcard .ak { font-size: 3cqw; letter-spacing: .14em; text-transform: uppercase; font-weight: 800; color: #B3261E; }
+.alertcard .at { font-family: var(--mono); font-size: 5.6cqw; font-weight: 700; }
+.alertcard .ad2 { font-size: 4.2cqw; font-weight: 600; color: #4C5C43; }
+.alertcard .abtns { display: flex; gap: 2.4cqw; margin-top: 1.6cqw; }
+.alertcard .abtns span { font-size: 3.6cqw; font-weight: 800; padding: 1.8cqw 4.4cqw; border-radius: 999px; border: 1.5px solid #D7E2CB; color: #4C5C43; }
+.alertcard .abtns .blk { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* K4 technically lines */
+.tech { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6cqw; }
+.tl1 p.lime { color: var(--lime); }
+.tl1 p { margin: 0; font-size: 7.2cqw; font-weight: 800; letter-spacing: -.02em; line-height: 1.08; }
+.tl1 .mcc { display: inline-block; margin-top: 1.6cqw; font-family: var(--mono); font-size: 3.4cqw; font-weight: 700; color: var(--mute-on-dark); border: 1px solid var(--mute-on-dark); border-radius: 1.2cqw; padding: .8cqw 2cqw; }
+
+/* AI3 ask box */
+.askbox { margin: auto 0; display: flex; align-items: center; gap: 3cqw; background: var(--paper); color: var(--ink); border-radius: 999px; padding: 4cqw 5cqw; font-size: 4.2cqw; font-weight: 600; }
+.askbox span { flex: 1; }
+.askbox b { background: var(--deep); color: var(--lime); border-radius: 50%; width: 8cqw; height: 8cqw; display: grid; place-items: center; flex: none; }
+
+.accchip { align-self: flex-start; display: inline-flex; align-items: baseline; gap: 1.6cqw; background: var(--lime); color: var(--ink); border-radius: 999px; padding: 1.6cqw 4cqw; font-size: 4cqw; font-weight: 700; }
+.accchip b { font-size: 5.4cqw; font-weight: 800; }
+
+.chip.pend { border-color: var(--flag-line); background: var(--flag-bg); color: var(--flag); }
+
+.tree .kids4 { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4cqw; width: 100%; padding-top: 3cqw; border-top: 2px solid var(--olive); }
+.tree .kids4 .node { text-align: center; font-size: 4.2cqw; padding: 2.6cqw 2cqw; }
+.tree .kids4 small { display: block; font-size: 3cqw; font-weight: 600; color: #4C5C43; margin-top: .6cqw; }
+
+.notes { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--line-soft); }
+.notes h3 { margin: 0 0 3px; font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.notes p { margin: 0; font-size: 13.5px; color: var(--text-2); }
+.notes code { font-family: var(--mono); font-size: 12.5px; }
+.call { background: var(--flag-bg); border: 1px solid var(--flag-line); border-radius: 8px; padding: 10px 12px; }
+.call h3 { color: var(--flag); }
+.call p { color: var(--text); }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">LinkedIn ads · Solution aware to most aware · 41 ads and a message ad</div>
+    <h1>Why Spade, the proof, and the test</h1>
+    <p class="standfirst">Four sets for buyers who already know they need better merchant data, ordered from earliest to closest to buying. Key messages carry the lines Spade already stands behind at events. Why Spade makes the case against the alternatives: a lookup against a verified record, a confident match or none, a graph that knows how businesses relate, and one merchant on every rail. Proof carries the three published numbers and the customers. The ask invites a test: send two to four weeks of real transactions under NDA, Spade runs them, and you get a field-by-field match report with a walkthrough from the enrichment team.</p>
+  </header>
+
+  <section class="map" aria-label="Campaign map">
+    <div class="map-item"><h2>Banks</h2><p class="ads">K1, K2, K3, K4, S2, S3, S5</p><p class="ads">S1, S7, P1, P3, P4</p><p class="ads">M1, M2, M5, M7, M9, M10, M11</p><p>Three campaigns: solution aware and proof on the bank ABM list; the ask on retargeting (site visitors and thought-leadership engagers).</p></div>
+    <div class="map-item"><h2>Fintechs</h2><p class="ads">K1, K2, K4, S1, S3, S4, S6</p><p class="ads">S2, P1, P2, P3, P4</p><p class="ads">M1, M2, M4, M6, M9, M10, M13</p><p>Same three-campaign split on the fintech ABM list.</p></div>
+    <div class="map-item"><h2>Use cases</h2><p class="ads">RC1, RC2, RC3, AI1, AI2, AI3</p><p>A use-case campaign per segment: fintechs get all six; banks get RC3 and AI1.</p></div><div class="map-item"><h2>Fraud and risk</h2><p class="ads">F1, F2, F3, F4, M8, M12</p><p>Title-targeted to fraud and risk leaders at banks and fintechs.</p></div><div class="map-item"><h2>Refresh and recall</h2><p class="ads">R1, R2, R3</p><p>Swap into the solution-aware campaigns next month, replacing the weakest 20%. R3 runs alone against the Money20/20 attendee list.</p></div><div class="map-item"><h2>Message ad</h2><p class="ads">C1</p><p>From Monica, to business banking titles on both ABM lists.</p></div>
+    <div class="map-item"><h2>Destination</h2><p>CTA button: Request demo. Lead form titled "Show me on my data", or the landing page's multi-step form.</p></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Solution aware: key messages</h2><span class="count">4 ads</span></div>
+    <p class="throughline">The lines Spade already stands behind at FinovateFall, Money20/20, and on the rollup banner, rebuilt for the feed. Each states what Spade does, plainly, with a real artifact in frame.</p>
+    <div class="grid">
+
+    <!-- K1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">K1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Value proposition</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade puts the verified merchant, category, and location on every transaction. That means fewer disputes, rewards that land, spend controls that hold, and cross-sell that converts.</p></div>
+      <div class="cr deep">
+        <p class="h">Know the verified merchant <span class="lime">behind every transaction.</span></p>
+        <ul class="triad"><li>Fewer disputes</li><li>Precise rewards and spend controls</li><li>Cross-sell that converts</li></ul>
+        <div class="record" style="margin-top:auto">
+          <div class="inrow">SIREN53313</div>
+          <div class="outrow"><span class="logo">S</span><div><b>Starbucks</b><span>Cafes · 646 N Michigan Ave, Chicago, IL</span></div></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Know the verified merchant behind every transaction<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The FinovateFall wall and rollup banner as an ad: the headline and the three outcomes in order. The record underneath shows what "know the merchant" means: <code>SIREN53313</code> never says Starbucks (Siren Retail runs the Reserve Roasteries), and Spade returns the brand, category, and store address. The proof line moves to P1 to keep this one quick to read.</p></div>
+      </div>
+    </article>
+
+    <!-- K2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">K2</span><span class="chip aud">Banks and fintechs</span><span class="chip">Deadpan truth</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">MCCs decide how every charge is filed. Spade returns the verified merchant and the category the business actually is.</p></div>
+      <div class="cr ink">
+        <p class="h">Your transaction data thinks <span class="lime">Amazon is a bookstore.</span></p>
+        <div class="record">
+          <div class="inrow">AMAZON MKTPLACE PMTS · 5942 · BOOK STORES</div>
+          <div class="outrow"><span class="logo">A</span><div><b>Amazon</b><span>Online Marketplace</span></div></div>
+        </div>
+        <p class="sub dim">Customers recognize every charge, and you can build offers, products, and AI on your own data.</p>
+      </div>
+      <div class="linkbar"><b>Put the verified merchant and category on every transaction<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The Money20/20 wall. The top line of the record is the incoming transaction with its network category code; Amazon, Online Marketplace is Spade's output. The code <code>5942 · BOOK STORES</code> is what makes the headline literally true.</p></div>
+      </div>
+    </article>
+
+    <!-- K3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">K3</span><span class="chip aud">Banks</span><span class="chip">The trapped asset</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Every swipe, payment, and transfer is a first-party record of how your customers spend. Spade makes it readable, so you can act on it.</p></div>
+      <div class="cr ink">
+        <p class="h">Your most valuable asset is <span class="lime">the data you can't read.</span></p>
+        <div class="resin"><div>PMUSA 303010 PHILADELP</div></div>
+        <p class="sub dim">Spade puts the verified merchant on every transaction, so customers recognize their charges and you can build offers, products, and AI on your own data.</p>
+      </div>
+      <div class="linkbar"><b>Unlock the value in your transaction data<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The Money20/20 resin block: a real descriptor suspended in a clear block, the trapped asset as an object. One real string inside it: <code>PMUSA 303010 PHILADELP</code>, which is ParkMobile, though nothing in the string says so. No resolved name on the image; the headline carries the point.</p></div>
+      </div>
+    </article>
+
+    <!-- K4 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">K4</span><span class="chip aud">Banks and fintechs</span><span class="chip">Deadpan truth</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">These are the MCCs the card networks actually send. Spade returns the verified merchant and what the business actually is, so your rewards, spend controls, and AI run on the right data.</p></div>
+      <div class="cr ink">
+        <div class="tech">
+          <p class="h">Your transaction data thinks</p>
+          <div class="tl1"><p class="lime">Amazon is a bookstore.</p><span class="mcc">MCC 5942</span></div>
+          <div class="tl1"><p class="lime">Netflix is a cable company.</p><span class="mcc">MCC 4899</span></div>
+          <div class="tl1"><p class="lime">Starbucks is fast food.</p><span class="mcc">MCC 5814</span></div>
+        </div>
+        <p class="punch">Your rewards, spend controls, and AI run on these codes.</p>
+      </div>
+      <div class="linkbar"><b>Run rewards, controls, and AI on what the business actually is<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The Money20/20 wall line ("Your transaction data thinks") with the hats' three examples under it, each with the real code beside it so the joke is provably true.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Solution aware: why Spade</h2><span class="count">8 ads</span></div>
+    <p class="throughline">Written like website headers for a buyer comparing approaches, using proven header techniques: the problem, "Finally", want minus don't-want, a loaded question, and the customer's own words. Each ad states one differentiator in plain language, with a real artifact in frame.</p>
+    <div class="grid">
+
+    <!-- S1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Problem header</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">The merchant behind a transaction usually isn't in the descriptor. Spade looks it up in its merchant graph and returns the verified merchant. See it on a month of your transactions.</p></div>
+      <div class="cr deep">
+        <p class="h">Nothing in this string says <span class="lime">ParkMobile.</span></p>
+        <p class="artifact">PMUSA 303010 PHILADELP</p>
+        <p class="sub dim">Enrichment that reads the string has to guess. Spade looks it up in a verified record of 99.9% of US and Canadian businesses.</p>
+      </div>
+      <div class="linkbar"><b>Match every transaction to a verified merchant<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p><code>PMUSA 303010 PHILADELP</code> is the incoming descriptor, set as the image. ParkMobile is Spade's resolution, named only in the headline so the string stays the grab. No location shown: the resolved city is ParkMobile's headquarters.</p></div>
+      </div>
+    </article>
+
+    <!-- S2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S2</span><span class="chip aud">Banks and fintechs</span><span class="chip">Voice of customer</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">A wrong merchant name turns into a call or a dispute. Spade returns only confident matches, and every match is a lookup against a verified record: over 99% accurate.</p></div>
+      <div class="cr deep">
+        <p class="quote" style="margin-top:auto">“It's worse to have an inaccurate fill than it is to have a no fill.”</p>
+        <span class="attr">A bank customer</span>
+        <p class="punch" style="margin-top:auto">Spade returns the merchant only when it finds a confident match.</p>
+        <span class="accchip"><b>&gt;99%</b> accurate</span>
+      </div>
+      <div class="linkbar"><b>Show customers merchant names you can stand behind<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A customer's sentence, set as the headline, answered by Spade's line underneath. No figures or scores on the image.</p></div>
+      </div>
+    </article>
+
+    <!-- S3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S3</span><span class="chip aud">Banks and fintechs</span><span class="chip">"Finally"</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade's merchant graph connects every location to its brand, and every brand to its parent. A reward or spend control set on a brand holds across all of them.</p></div>
+      <div class="cr softfill">
+        <p class="h">Finally, merchant data that knows <span style="color:var(--olive)">how businesses relate.</span></p>
+        <div class="tree">
+          <div class="node parent">Amazon.com, Inc. <span style="font-weight:600;opacity:.75">· parent</span></div>
+          <div class="stem"></div>
+          <div class="kids4"><div class="node">Amazon<small>Online marketplace</small></div><div class="node">AWS<small>Web infrastructure</small></div><div class="node">Prime Video<small>Media</small></div><div class="node">Amazon Music<small>Streaming services</small></div></div>
+        </div>
+        <p class="sub">Every location rolls up to its brand, and every brand to its parent company.</p>
+      </div>
+      <div class="linkbar"><b>Set rewards and controls on the brand, once<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A parent with four of its businesses under it, each with the category Spade returns for it. Names only, no logos.</p></div>
+      </div>
+    </article>
+
+    <!-- S4 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S4</span><span class="chip aud">Fintechs</span><span class="chip">Want minus don't-want</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade keeps the matching current as merchant IDs (MIDs) rotate. Rewards are attributed to the right merchant, and nobody maintains a list.</p></div>
+      <div class="cr ink">
+        <p class="h">Run merchant-level rewards <span class="lime">without maintaining a merchant list.</span></p>
+        <div style="margin:auto 0;display:flex;flex-direction:column"><div class="record">
+          <div class="inrow">REWARD RULE</div>
+          <div class="outrow"><span class="logo">5%</span><div><b>5% back at every Starbucks</b></div></div>
+        </div>
+        <div class="scribble">
+          <svg viewBox="0 0 120 70" aria-hidden="true"><path d="M110 64 C 92 58, 60 52, 40 30 C 32 21, 28 14, 26 6" fill="none" stroke="#B2EB76" stroke-width="3" stroke-linecap="round"/><path d="M15 15 L 26 4 L 33 18" fill="none" stroke="#B2EB76" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>even as merchant IDs (MIDs) change</span>
+        </div>
+      </div>
+      </div>
+      <div class="linkbar"><b>Run merchant-level rewards without a merchant list<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>One reward rule, written the way a program manager thinks of it, with a hand-drawn arrow and note outside the card: "even as merchant IDs (MIDs) change." The note is Spade's job; the rule is the customer's. The example (5% at Starbucks) is the one in Spade's published API docs.</p></div>
+      </div>
+    </article>
+
+    <!-- S5 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S5</span><span class="chip aud">Banks</span><span class="chip">Voice of customer</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Every rail resolves to the same verified merchant: card, ACH, wire, RTP, ATM, checks, and internal transfers. Your teams see full money movement under one counterparty ID.</p></div>
+      <div class="cr deep">
+        <p class="quote">“Walmart should be Walmart, whether it's ACH or a card.”</p>
+        <span class="attr">A regional bank</span>
+        <div class="rails">
+          <div class="col"><span class="rail">Card</span><span class="rail">ACH</span><span class="rail">Wire</span></div>
+          <span class="arrow">→</span>
+          <span class="one">Same counterparty ID</span>
+        </div>
+        <p class="sub dim">Spade resolves every rail to the same verified merchant.</p>
+      </div>
+      <div class="linkbar"><b>See one verified merchant on every rail<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A bank buyer's own sentence, set as the headline. Three rails shown for space; the intro carries the full list. No accuracy or latency figure here, since the published numbers are card figures.</p></div>
+      </div>
+    </article>
+
+    <!-- S6 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S6</span><span class="chip aud">Fintechs</span><span class="chip">Voice of customer</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Switching enrichment is a test you run on your own data. Send us a month of transactions and compare the match rates yourself.</p></div>
+      <div class="cr cardfill">
+        <div class="review">
+          <span class="stars" aria-label="5 stars">★★★★★</span>
+          <p class="quote">“We saw an immediate and noticeable improvement in match rates compared to what we had before.”</p>
+          <span class="who">Matthew H., Product Partnerships Manager</span>
+          <span class="src">G2 review</span>
+        </div>
+      </div>
+      <div class="linkbar"><b>Compare match rates on your own transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A published G2 review, quoted exactly. Generic review-card styling with no G2 logo.</p></div>
+      </div>
+    </article>
+
+    <!-- S7 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S7</span><span class="chip aud">Banks</span><span class="chip">Plain statement</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade's model reads the verified merchant behind every transaction. Each customer then sees the offers most relevant to them, built on your own customer IDs with no PII.</p></div>
+      <div class="cr deep">
+        <p class="h">See which customers are likely to want <span class="lime">a credit card, a mortgage, or a student loan.</span></p>
+        <div class="offers">
+          <div class="om"><span class="offer">Credit card</span><span class="ar">→</span><span class="cust">Customer ••4821</span></div>
+          <div class="om"><span class="offer">Mortgage</span><span class="ar">→</span><span class="cust">Customer ••0377</span></div>
+          <div class="om"><span class="offer">Student loan</span><span class="ar">→</span><span class="cust">Customer ••6150</span></div>
+        </div>
+        <p class="sub dim">So each offer reaches someone it fits.</p>
+      </div>
+      <div class="linkbar"><b>See which customers are likely to want your next product<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>Three offers, each landing on a different customer. Masked IDs only; illustrative pairings with no real customers and no claims about anyone's spending.</p></div>
+      </div>
+    </article>
+
+    <!-- S8 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">S8</span><span class="chip aud">Business banking</span><span class="chip">Loaded question</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Business customers still pay many suppliers by check. Spade matches each payment to the verified business and shows which accept card, so you can offer a better way to pay.</p></div>
+      <div class="cr deep">
+        <p class="h">Which of the businesses your customers pay by check <span class="lime">already take card?</span></p>
+        <div class="form">
+          <div class="formhead">Check payments</div>
+          <div class="row"><span class="box">✓</span><span class="kind">Office supplies</span><span class="tag">Takes card</span></div>
+          <div class="row"><span class="box">✓</span><span class="kind">Freight</span><span class="tag">Takes card</span></div>
+          <div class="row"><span class="box no">✕</span><span class="kind">Rent</span><span class="tag no">Check only</span></div>
+        </div>
+        <p class="sub dim">Spade shows which payees accept card.</p>
+      </div>
+      <div class="linkbar"><b>See which check payees already accept card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A short list of check payees, each marked by whether the business takes card. Illustrative rows: business types only, no real payees or amounts.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="section-head"><h2>Use cases: merchant-level rewards and controls</h2><span class="count">3 ads</span></div>
+    <p class="throughline">What the verified merchant makes possible at the swipe, with named customer proof.</p>
+    <div class="grid">
+
+    <!-- RC1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">RC1</span><span class="chip aud">Fintechs</span><span class="chip">Plain statement</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Lock a card to one merchant. Spade recognizes that merchant at authorization, even as merchant IDs (MIDs) change.</p></div>
+      <div class="cr deep">
+        <p class="h">Vendor cards that work at one vendor <span class="lime">and nowhere else.</span></p>
+        <div class="form">
+          <div class="formhead">Vendor card</div>
+          <div class="row"><span class="box">✓</span><span class="kind">The vendor it was issued for</span><span class="tag">Approved</span></div>
+          <div class="row"><span class="box no">✕</span><span class="kind">Any other merchant</span><span class="tag no">Declined</span></div>
+        </div>
+        <p class="sub dim">Rho's vendor cards and Navan's merchant lock run on Spade.</p>
+      </div>
+      <div class="linkbar"><b>Lock cards to the merchant you meant<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A vendor-locked card's two outcomes. Generic rows, no real vendors.</p></div>
+      </div>
+    </article>
+
+    <!-- RC2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">RC2</span><span class="chip aud">Fintechs (fleet and spend controls)</span><span class="chip">Plain statement</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade returns the verified merchant and its location inside the authorization window. Fleet programs approve legitimate fuel purchases and block misuse.</p></div>
+      <div class="cr ink">
+        <p class="h">Approve fuel at the right station. <span class="lime">Block the rest.</span></p>
+        <div class="form">
+          <div class="formhead">Fuel card</div>
+          <div class="row"><span class="box">✓</span><span class="kind">Fuel at an approved station</span><span class="tag">Approved</span></div>
+          <div class="row"><span class="box no">✕</span><span class="kind">Outside the approved area</span><span class="tag no">Declined</span></div>
+        </div>
+        <p class="sub dim">Coast runs location-based fuel authorization on Spade, in real time.</p>
+      </div>
+      <div class="linkbar"><b>Enforce fuel controls at the station level<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A fuel card's two outcomes at authorization, by station and location.</p></div>
+      </div>
+    </article>
+
+    <!-- RC3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">RC3</span><span class="chip aud">Banks and fintechs</span><span class="chip">One number</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Bilt rewards members at specific neighborhood merchants. Spade matches each transaction to the verified merchant and location, so the right purchases earn the reward.</p></div>
+      <div class="cr cardfill">
+        <p class="h">Bilt rewards members at more than 45,000 local businesses.</p>
+        <p class="cover">45,000+</p>
+        <p class="sub"><b>Spade matches each transaction to the right one, so the reward goes where it was promised.</b></p>
+      </div>
+      <div class="linkbar"><b>Run merchant-level rewards customers can count on<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A customer's published scale as the hero number, attributed to Bilt, never as a Spade capability line.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Use cases: AI on your transaction data</h2><span class="count">3 ads</span></div>
+    <p class="throughline">Every model and agent an institution builds reads transaction data. These ads make the case for giving it the verified merchant.</p>
+    <div class="grid">
+
+    <!-- AI1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">AI1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Before and after</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">A model trained on MCCs learns that an Apple purchase was a theater ticket. Spade gives it the verified merchant and what the business actually is.</p></div>
+      <div class="cr ink">
+        <p class="h">Your AI learns whatever <span class="lime">your transaction data says.</span></p>
+        <div class="record">
+          <div class="inrow">PP*ITUNESAPPST · MCC 7922</div>
+          <div class="outrow" style="border-bottom:1px dashed #D7E2CB"><span class="logo" style="background:#B3261E;color:#fff">✕</span><div><b>Model learns: theater tickets</b></div></div>
+          <div class="outrow"><span class="logo">✓</span><div><b>Spade: Apple, via PayPal</b></div></div>
+        </div>
+        <p class="sub dim">Spade gives your models the verified merchant behind every transaction.</p>
+      </div>
+      <div class="linkbar"><b>Ground your models in the verified merchant<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>One real string with the category its code assigns, set against what Spade returns. MCC 7922 is Theatrical Producers and Ticket Agencies.</p></div>
+      </div>
+    </article>
+
+    <!-- AI2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">AI2</span><span class="chip aud">Fintechs and AI builders</span><span class="chip">Plain statement</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade is available over API and an MCP server. Your agents get the verified merchant, category, and location for every transaction they read.</p></div>
+      <div class="cr deep">
+        <p class="h">Connect your AI agents to Spade's merchant graph <span class="lime">over MCP.</span></p>
+        <div class="model">
+          <div class="in" style="text-align:center">Your agent</div>
+          <div class="down">↓</div>
+          <div class="in" style="text-align:center">Spade MCP server</div>
+          <div class="down">↓</div>
+          <div class="out">Verified merchant, category, location</div>
+        </div>
+        <p class="sub dim">A verified record of 99.9% of US and Canadian businesses.</p>
+      </div>
+      <div class="linkbar"><b>Give your AI agents verified merchant data<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A three-step path from the customer's agent to the answer it gets back.</p></div>
+      </div>
+    </article>
+
+    <!-- AI3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">AI3</span><span class="chip aud">Fintechs</span><span class="chip">Plain statement</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Questions that used to wait weeks in an analyst queue come back in seconds. Spade writes deterministic queries over your own enriched data.</p></div>
+      <div class="cr ink">
+        <p class="h">Ask your transaction data a question. <span class="lime">Get the answer in seconds.</span></p>
+        <div class="askbox"><span>Where did our cardholders spend most last month?</span><b>↵</b></div>
+        <p class="sub dim">Deterministic answers. No figure is ever invented.</p>
+      </div>
+      <div class="linkbar"><b>Get answers from your transaction data in seconds<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A plain-language question typed into a single input. Illustrative question.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Product aware: the proof</h2><span class="count">4 ads</span></div>
+    <p class="throughline">Low in the funnel, for buyers already weighing Spade. The three published numbers, what sub-40ms makes possible, the long tail, and the customers who run on it.</p>
+    <div class="grid">
+
+    <!-- P1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">P1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Three numbers</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Every match is a lookup against a record of 99.9% of US and Canadian businesses: over 99% accurate, in under 40ms (p99). SOC 2 Type 2.</p></div>
+      <div class="cr ink">
+        <p class="h">Transaction data that's complete, accurate, and fast.</p>
+        <div class="stats">
+          <div class="stat"><b>99.9%</b><span>of US and Canadian businesses covered</span></div>
+          <div class="stat"><b>&gt;99%</b><span>accurate</span></div>
+          <div class="stat"><b>&lt;40ms</b><span>p99 response time</span></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>See the numbers on your own transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The proof line from both booth walls, given the whole image. Coverage, accuracy, and latency together is a set few vendors publish, which is what makes it read as verified.</p></div>
+      </div>
+    </article>
+
+    <!-- P2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">P2</span><span class="chip aud">Fintechs</span><span class="chip">One number</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade returns the verified merchant in under 40ms p99, fast enough to put in your SLA. Card-linked offers, proximity authorization, and vendor-locked cards run on it.</p></div>
+      <div class="cr ink">
+        <p class="h">Transaction data fast enough for <span class="lime">the authorization stream.</span></p>
+        <div class="lat"><b>&lt;40ms</b><span>p99</span></div>
+        <p class="sub dim">Approve or decline a card transaction based on the verified merchant.</p>
+      </div>
+      <div class="linkbar"><b>Put the verified merchant in every authorization<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>One published figure set large, with a plain headline saying what it makes possible.</p></div>
+      </div>
+    </article>
+
+    <!-- P3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">P3</span><span class="chip aud">Banks and fintechs</span><span class="chip">One number</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Small, local, and new businesses are where other approaches leave a blank. Spade matches them against a verified record of 99.9% of US and Canadian businesses.</p></div>
+      <div class="cr cardfill">
+        <p class="h">Transaction data with the context <span style="color:var(--olive)">the string leaves out.</span></p>
+        <div class="record" style="margin-top:auto;box-shadow:0 1.6cqw 5cqw rgba(9,15,5,.12)">
+          <div class="inrow">PY *KBC01 BRAYTON</div>
+          <div class="outrow"><span class="logo">K</span><div><b>Kaladi Brothers Coffee</b><span>Cafes · 6921 Brayton Dr, Anchorage, AK · via Payrix</span></div></div>
+        </div>
+        <p class="sub" style="margin-top:auto"><b>Small, local businesses included: 99.9% of US and Canadian businesses.</b></p>
+      </div>
+      <div class="linkbar"><b>See the merchant, category, and location on every transaction<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>Reading order: the headline, the raw string, what Spade returns, then the coverage line. A local Anchorage café behind a processor prefix shows the long tail: nothing in <code>PY *KBC01 BRAYTON</code> names it. Show this string on its own.</p></div>
+      </div>
+    </article>
+
+    <!-- P4 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">P4</span><span class="chip aud">Banks and fintechs</span><span class="chip">Social proof</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Banks and fintechs use Spade's data to power rewards programs, spend controls, and analytics. See what it returns on your transactions.</p></div>
+      <div class="cr softfill">
+        <span class="eyeline">TRUSTED BY</span>
+        <div class="logos"><span>Citizens</span><span>Cash App</span><span>Stripe</span><span>Navan</span><span>Rho</span><span>PayPal</span><span>Mercury</span><span>Bilt</span></div>
+        <p class="sub"><b>Banks and fintechs that put the verified merchant on every transaction.</b></p>
+      </div>
+      <div class="linkbar"><b>See what Spade returns on your transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The rollup banner's "Trusted by" panel as its own ad. Names stand in for the customer logos the designer places; same eight as the banner.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Most aware: the ask</h2><span class="count">11 ads</span></div>
+    <p class="throughline">A smaller set than the others, for buyers ready to evaluate. Each ad makes one reasonable ask and removes one reason to say no: the time it takes, the work to integrate, the vendor review, or doubt that the data will hold up. M7 and M8 carry the Predictions version of the same ask.</p>
+  <div class="grid">
+
+    <!-- 1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M1</span><span class="chip aud">Banks and fintechs</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Send two to four weeks of real transactions. Spade looks each one up in its merchant graph, a verified record of 99.9% of US and Canadian businesses, and sends back your match report.</p></div>
+      <div class="cr ink">
+        <p class="h">Send us a month of transactions. <span class="lime">Get your match report back.</span></p>
+        <div class="audit-doc">
+          <div class="label">Your match report</div>
+          <ul><li>Match rate, field by field</li><li>Before and after for every row</li><li>A walkthrough with our team</li></ul>
+          <div class="seal" style="margin-top:auto">Under NDA. No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Get a match report on your own transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A document laid flat, listing exactly what the prospect gets back. The list is the offer, so it stays short and literal. The seal answers the two questions a data owner asks before sending anything.</p></div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M2</span><span class="chip aud">Banks and fintechs</span><span class="chip">Before and after</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Send us a month of your transactions. Spade returns the verified merchant behind each descriptor, any third party in the middle, and the category the business actually is.</p></div>
+      <div class="cr deep">
+        <p class="h">This Dollar General order was coded as <span class="lime">a restaurant.</span></p>
+        <div class="ba">
+          <div class="before"><span class="tag">Before</span><span class="desc">DD *DOORDASH DOLLARGEN</span><span class="code">MCC 5812 · Eating places</span></div>
+          <div class="after"><span class="tag">After</span><div class="merchant"><div class="logo">DG</div><div><div class="name">Dollar General</div><div class="meta">via DoorDash · Discount stores</div></div></div></div>
+        </div>
+        <p class="sub">See it on your own transactions.</p>
+      </div>
+      <div class="linkbar"><b>See the verified merchant behind your descriptors<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p><code>DD *DOORDASH DOLLARGEN</code> and <code>MCC 5812 · Eating places</code> are the incoming transaction. Dollar General, via DoorDash, Discount stores is Spade's output. The two panels must read as different kinds of thing without the labels.</p></div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M4</span><span class="chip aud">Fintechs</span><span class="chip">Three steps</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade maps your fields from a few sample rows. You test on a month of real transactions, then go live. Unit had it live in under two weeks.</p></div>
+      <div class="cr cardfill">
+        <p class="h">Verified merchant data, live in three steps.</p>
+        <div class="steps">
+          <div class="step"><span class="num">1</span><p>Send sample rows. We map your fields.</p></div>
+          <div class="step"><span class="num">2</span><p>Test a month of data.</p></div>
+          <div class="step"><span class="num">3</span><div><p>Go live.</p><div class="pair"><span class="in">PP*EB</span><span>→</span><span class="out">Eventbrite, via PayPal</span></div></div></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Test on your transactions, then go live<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>Three real steps from how evaluations run today. <code>PP*EB</code> is an incoming descriptor (two letters behind a PayPal prefix) and Eventbrite, via PayPal, is Spade's output; they need to look like input and output.</p></div>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M5</span><span class="chip aud">Banks</span><span class="chip">Vendor-review checklist</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Third-party risk asks every vendor the same questions. Spade is SOC 2 Type 2, never receives PII, and starts with a sample-data test your risk team already knows how to review.</p></div>
+      <div class="cr deep">
+        <p class="h">Built to clear your <span class="lime">third-party risk review.</span></p>
+        <div class="form">
+          <div class="formhead">Third-party risk review</div>
+          <div class="row"><span class="box">✓</span>SOC 2 Type 2</div>
+          <div class="row"><span class="box">✓</span>Never receives PII</div>
+          <div class="row"><span class="box">✓</span>In production at an OCC-regulated bank</div>
+          <div class="row"><span class="box">✓</span>Sample-data test under NDA</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Start with a sample-data test under NDA<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A third-party risk form with every box ticked. Generic form styling, no bank's template. Every line is approved Spade messaging.</p></div>
+      </div>
+    </article>
+
+    <!-- 6 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M6</span><span class="chip aud">Fintechs</span><span class="chip">Notification</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Every month, someone updates the merchant list and sends it for review. Register the list with Spade once and test it on a month of your own transactions.</p></div>
+      <div class="cr ink">
+        <div class="stack">
+          <div class="notif"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
+          <div class="notif ghost"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
+          <div class="notif ghost2"><span class="dot">R</span><div><div class="k">Review requested</div><div class="t">Monthly update: rewards merchant list</div></div></div>
+        </div>
+        <div class="push">
+          <p class="h">Stop updating your merchant list <span class="lime">every month.</span></p>
+          <p class="sub dim">Register your merchants once. Spade keeps the matching current as merchant IDs (MIDs) rotate.</p>
+        </div>
+      </div>
+      <div class="linkbar"><b>Test your merchant list on a month of transactions<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A stack of identical review requests, one per month, fading back. The repetition is the point. No product name or code host branding on the notification.</p></div>
+      </div>
+    </article>
+
+    <!-- 7 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M7</span><span class="chip aud">Banks</span><span class="chip">One number</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade tunes its foundation model to your objective on your own customer IDs, with no PII. See what it finds in your own customer base.</p></div>
+      <div class="cr deep">
+        <p class="big">35%</p>
+        <p class="bigsub"><b>better than a traditional propensity model.</b><br>Spade's foundation model, fine-tuned for a US bank's lending program.</p>
+        <p class="offer">See what it finds on your own customer IDs.</p>
+      </div>
+      <div class="linkbar"><b>See what a tuned model finds in your customer base<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>One published figure, set as the image. The line under it says what it beat and where, from the launch release ("outperformed a traditional propensity model built for the same task by 35%"), so the figure never travels alone.</p></div>
+      </div>
+    </article>
+
+    <!-- 8 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M8</span><span class="chip aud">Fraud and risk</span><span class="chip">Timeline</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade's foundation model, fine-tuned for fraud rings, flags the merchants running fraud. See which ones it flags in your own transactions.</p></div>
+      <div class="cr ink">
+        <p class="h">One fraudulent merchant, flagged <span class="lime">five months before the issuer blocked it.</span></p>
+        <div class="tl">
+          <div class="track"><div class="span"></div><span class="pin a"></span><span class="pin b"></span><span class="lab a">Flagged</span><span class="lab b">First block</span></div>
+          <div class="gap">5 months</div>
+        </div>
+        <p class="sub dim">Across eight months: up to $3 million in fraudulent spend the issuer could have blocked.</p>
+      </div>
+      <div class="linkbar"><b>See which merchants in your data are running fraud<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A timeline drawn as a shape. It has no dates or axis values because the release gives only the gap. "One fraudulent merchant" keeps the release's "in one case" qualifier in fewer words.</p></div>
+      </div>
+    </article>
+
+
+    <!-- M9 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M9</span><span class="chip aud">Business banking</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Send a batch file of your business banking transfers, with no PII. Spade runs it and shows which payees accept card, so you can offer your customers a better way to pay.</p></div>
+      <div class="cr ink">
+        <p class="h">Send us your business transfers. <span class="lime">See which payees take card.</span></p>
+        <div class="audit-doc">
+          <div class="label">You get back</div>
+          <ul><li>Share of transfers that pay a business</li><li>Which of those businesses accept card</li><li>Top payees by frequency and volume</li></ul>
+          <div class="seal" style="margin-top:auto">No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Find the check volume you could move to card<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The same itemized-audit layout as M1, with the business banking offer. The three lines are Monica's offer as she posted it, in shorter words.</p></div>
+      </div>
+    </article>
+
+    <!-- M10 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M10</span><span class="chip aud">Banks and fintechs</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">MCCs file coffee shops as restaurants and Amazon as a bookstore. Send a month of transactions and see which of yours are misfiled.</p></div>
+      <div class="cr ink">
+        <p class="h">See which of your transactions <span class="lime">are filed under the wrong MCC.</span></p>
+        <div class="audit-doc">
+          <ul><li>Each MCC next to what the business actually is</li><li>Charges filed under the wrong category</li><li>A walkthrough with our team</li></ul>
+          <div class="seal" style="margin-top:auto">Under NDA. No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Find the transactions filed under the wrong MCC<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The M1 layout with a narrower, sharper deliverable: every network category code set against the category Spade returns.</p></div>
+      </div>
+    </article>
+
+    <!-- M11 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M11</span><span class="chip aud">Banks</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Transfers name banks, billers, and lenders in free-text fields. Spade resolves each one to the verified counterparty, on every rail.</p></div>
+      <div class="cr deep">
+        <p class="h">Send us your transfers. <span class="lime">See which other banks and lenders your customers pay.</span></p>
+        <div class="audit-doc">
+          <ul><li>Payments to other banks and card issuers</li><li>Recurring payments and who receives them</li><li>Top counterparties by volume</li></ul>
+          <div class="seal" style="margin-top:auto">No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>See where your customers send money on transfers<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A primacy offer for banks: who their customers pay outside the bank, from their own transfer data.</p></div>
+      </div>
+    </article>
+
+    <!-- M13 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M13</span><span class="chip aud">Fintechs</span><span class="chip">Risk reversal</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Plug Spade into your live card transactions and see the results in your own app. If it isn't right, opt out before the contract starts.</p></div>
+      <div class="cr deep">
+        <p class="h">Run Spade on your live transactions for 30 days. <span class="lime">Opt out before the contract starts.</span></p>
+        <div class="tl">
+          <div class="track"><div class="span"></div><span class="pin a"></span><span class="pin b"></span><span class="lab a">Day 1: live</span><span class="lab b">Day 30: keep it or opt out</span></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Try Spade on live transactions for 30 days<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A 30-day track from going live to the decision point. Answers "what if I don't like it."</p></div>
+      </div>
+    </article>
+
+  </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Fraud and risk</h2><span class="count">5 ads, plus M8</span></div>
+    <p class="throughline">Fraud and risk teams buy Predictions' fraud models, so these lead with the fraud outcome, in the language fraud leaders used on calls about open fraud deals. Every figure comes from the launch release.</p>
+    <div class="grid">
+
+    <!-- F1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">F1</span><span class="chip aud">Fraud and risk</span><span class="chip">One number</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade's model, fine-tuned for fraud rings, replayed eight months of an issuer's transactions. See what it flags in yours.</p></div>
+      <div class="cr ink">
+        <p class="h">Catch fraudulent merchants <span class="lime">early enough to block them.</span></p>
+        <p class="big">$3M</p>
+        <p class="bigsub">Up to $3 million in fraudulent spend one issuer could have blocked, across eight months of its own transactions.</p>
+      </div>
+      <div class="linkbar"><b>Block fraudulent merchants before the losses add up<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The launch release's fraud result as one number. The sentence under it keeps the release's qualifiers: "up to," and the merchants flagged early enough for the issuer to block.</p></div>
+      </div>
+    </article>
+
+    <!-- F2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">F2</span><span class="chip aud">Fraud and risk</span><span class="chip">Plain statement</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Spade's model reads the verified merchant behind every transaction. It flags shell merchants and fraud rings early enough for you to block them.</p></div>
+      <div class="cr ink">
+        <p class="h">Spot shell merchants and fraud rings <span class="lime">before they cash out.</span></p>
+        <div class="form flagrow">
+          <div class="formhead">Flagged by Spade</div>
+          <div class="row"><span class="box flag">!</span><span class="kind">Shell merchants set up to cash out a card</span></div>
+          <div class="row"><span class="box flag">!</span><span class="kind">Fraud rings working through the same merchants</span></div>
+          <div class="row"><span class="box flag">!</span><span class="kind">Merchants created to scam cardholders</span></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Spot and block shell merchants and fraud rings<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The three merchant-fraud patterns fraud leaders described on calls, as a flagged list. Pattern names only; no merchants, amounts, or scores.</p></div>
+      </div>
+    </article>
+
+    <!-- F3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">F3</span><span class="chip aud">Fraud and risk</span><span class="chip">"Finally"</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">A transaction score leaves your team to work out what's behind it. Spade's model flags the merchant behind the fraud, so your team knows what to block.</p></div>
+      <div class="cr deep">
+        <p class="h">Finally, fraud alerts that name <span class="lime">the merchant to block.</span></p>
+        <div class="alertcard">
+          <div class="ak">Merchant flagged</div>
+          <div class="at">Merchant ••••7719</div>
+          <div class="ad2">Behaving like a fraudulent business</div>
+          <div class="abtns"><span class="blk">Block</span><span>Review</span></div>
+        </div>
+        <p class="sub dim">Spade's model flags merchants behaving the way fraudulent businesses do.</p>
+      </div>
+      <div class="linkbar"><b>Get fraud alerts that name the merchant to block<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A single fraud alert that points at a merchant, with the two actions a fraud team takes. Masked merchant, no amounts or scores.</p></div>
+      </div>
+    </article>
+
+    <!-- F4 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">F4</span><span class="chip aud">Fraud and risk</span><span class="chip">Before and after</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Many fraud teams find a bad merchant only after the disputes and claims pile up. Spade's model flags merchants behaving the way fraudulent businesses do, earlier.</p></div>
+      <div class="cr ink">
+        <p class="h">Flag the fraudulent merchant <span class="lime">before the disputes arrive.</span></p>
+        <div class="flow">
+          <div class="flowrow"><span class="flowlab">Today</span><span class="st">Disputes pile up</span><span class="ar">→</span><span class="st">Team investigates</span><span class="ar">→</span><span class="st">Merchant blocked</span></div>
+          <div class="flowrow"><span class="flowlab lime">With Spade</span><span class="st go">Merchant flagged</span><span class="ar">→</span><span class="st go">Merchant blocked</span></div>
+        </div>
+      </div>
+      <div class="linkbar"><b>Get ahead of merchant fraud<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>Two short sequences: the reactive path fraud teams described, and the shorter one with a flag up front. No numbers or timings on the image.</p></div>
+      </div>
+    </article>
+
+    <!-- M12 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">M12</span><span class="chip aud">Fraud and risk</span><span class="chip">Itemized audit</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Send a sample of card transactions under NDA. Spade runs its fraud model and sends back the merchants it would flag, with the spend at each one.</p></div>
+      <div class="cr ink">
+        <p class="h">Send us your card transactions. <span class="lime">See which merchants Spade would flag.</span></p>
+        <div class="audit-doc">
+          <ul><li>Merchants behaving like fraudulent businesses</li><li>Spend your customers sent to each one</li><li>A walkthrough with our team</li></ul>
+          <div class="seal" style="margin-top:auto">No PII.</div>
+        </div>
+      </div>
+      <div class="linkbar"><b>See which merchants in your data Spade would flag<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>The M1 layout for fraud teams: a flagged-merchant file on their own data.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Refresh and recall</h2><span class="count">3 ads</span></div>
+    <p class="throughline">New concepts to rotate in next month, when the weakest ads come out. One for the strongest buying trigger, one for teams maintaining their own matching, and one callback to the Money20/20 booth.</p>
+    <div class="grid">
+
+    <!-- R1 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">R1</span><span class="chip aud">Fintechs and banks launching cards</span><span class="chip">Problem header</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">Every new card program ships with a transaction feed. Spade puts the verified merchant on every charge from day one, so customers recognize what they see.</p></div>
+      <div class="cr deep">
+        <p class="h">Launching a card? Your customers <span class="lime">will see these on day one.</span></p>
+        <div class="feed">
+          <div class="row"><span class="dot"></span><span class="str">PMUSA 303010 PHILADELP</span></div>
+          <div class="row"><span class="dot"></span><span class="str">PP*ITUNESAPPST</span></div>
+          <div class="row"><span class="dot"></span><span class="str">SIREN53313</span></div>
+        </div>
+        <p class="sub dim">Customers recognize every charge, and you can build offers, products, and AI on your own data.</p>
+      </div>
+      <div class="linkbar"><b>Launch your card with merchant data customers recognize<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A card app's transaction list showing three raw strings, the way a cardholder would see them without enrichment. No amounts.</p></div>
+      </div>
+    </article>
+
+    <!-- R2 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">R2</span><span class="chip aud">Fintechs</span><span class="chip">Voice of customer</span><span class="chip pend">Pending Spade sign-off</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">In-house matching works until merchants rename, move, and rotate merchant IDs (MIDs). Spade keeps a verified record of 99.9% of US and Canadian businesses current.</p></div>
+      <div class="cr ink">
+        <p class="quote" style="margin-top:auto">“We built a model with a ton of complexity, trying to do a bunch of fuzzy matching.”</p>
+        <span class="attr">A fintech data team</span>
+        <p class="punch" style="margin-top:auto">Spade maintains the merchant record, so your engineers don't have to.</p>
+      </div>
+      <div class="linkbar"><b>Stop maintaining your own merchant matching<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>A prospect describing its in-house build, answered by Spade's line. Aimed at an in-house build, never at a competitor.</p></div>
+      </div>
+    </article>
+
+    <!-- R3 -->
+    <article class="ad">
+      <div class="ad-top"><span class="ref">R3</span><span class="chip aud">Money20/20 attendees</span><span class="chip">Recall</span></div>
+      <div class="post"><div class="byline"><div class="avatar">S</div><div><b>Spade</b><span>Promoted</span></div></div>
+        <p class="intro">If you passed our wall at Money20/20, here's the fix: Spade returns the verified merchant and the category the business actually is.</p></div>
+      <div class="cr ink">
+        <p class="h">Your transaction data still thinks <span class="lime">Amazon is a bookstore.</span></p>
+        <div class="record">
+          <div class="inrow">AMAZON MKTPLACE PMTS · 5942 · BOOK STORES</div>
+          <div class="outrow"><span class="logo">A</span><div><b>Amazon</b><span>Online Marketplace</span></div></div>
+        </div>
+        <p class="sub dim">Customers recognize every charge, and you can build offers, products, and AI on your own data.</p>
+      </div>
+      <div class="linkbar"><b>Put the verified merchant and category on every transaction<span class="url">spade.com</span></b><span class="cta">Request demo</span></div>
+      <div class="notes">
+        <div><h3>What this is</h3><p>K2 with one word added. "Still" turns the booth line into a callback for people who saw it in Vegas.</p></div>
+        <div><h3>Audience</h3><p>Upload the Money20/20 attendee list from the Grip sync as a matched audience. Run it for four to six weeks while the booth is fresh.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Message ad</h2><span class="count">1 message</span></div>
+    <p class="throughline">Sent from a person, to the business banking titles on both lists.</p>
+    <div class="grid" style="grid-template-columns:1fr">
+
+    <article class="convo">
+      <div class="subj">From <b>Monica Murthy</b> · Subject: <b>Which of your check payees take card?</b></div>
+      <p class="msg">Hi %FIRSTNAME%, at Money20/20, eight institutions asked me the same thing: which of the businesses their customers pay by check already accept card? Send us a batch file of your business transfers (no PII) and we'll show you which payees take card, and who your customers pay most.</p>
+      <div class="btns"><span>Run it on my data</span><span>Not right now</span></div>
+      <div class="notes" style="padding:12px 0 0">
+        <div><h3>What this is</h3><p>A LinkedIn message ad sent from Monica, who ran these conversations. Conversation ads are the playbook's cheapest route to a meeting, and her post already proves the story lands. "Run it on my data" opens a lead form.</p></div>
+      </div>
+    </article>
+
+    </div>
+  </section>
+</div>
+</body>
+</html>
